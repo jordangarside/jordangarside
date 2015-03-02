@@ -7,3 +7,8 @@
 meteor-platform
 autopublish
 insecure
+coffeescript
+raix:famono
+mquandalle:jade
+iron:router
+fourseven:scss
