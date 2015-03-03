@@ -8,8 +8,14 @@ head
 template(name="layout")
 	+famousContext id="mainCtx" 
 		+Modifier id="rootModifier"
-			+ContainerSurface size="[undefined, undefined]"
+			+ContainerSurface size="[undefined, undefined]" id="rootContainer"
 				+Surface size="[true, true]" class="page-header" origin="[0.06, 0.04]" align="[0.06, 0.04]"
 					+yield
 				+Surface size="[2000,2000]" class="world-background" origin="[.5,1]" align="[.5,1]" translate="[0, 1800, 0]"
 					| 
+				+Modifier id="personAlignmentModifier" origin="[.5,1]" align="[.5,1]"
+					+Modifier id="personRotationXModifier"
+						+Modifier id="personRotationZModifier"
+							+Modifier id="personTranslationModifier" translate="[0, -205, 0]"
+								+Surface size="[50, 50]" class="demo-person" id="person"
+									| 
