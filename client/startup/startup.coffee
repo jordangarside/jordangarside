@@ -62,3 +62,17 @@ Famous.cursorToArray = (cursor, data, createFn, elementsBefore) ->
 			console.log "Element movedFrom #{fromIndex} to #{toIndex}"
 			@removedAt(undefined, fromIndex)
 			@addedAt(document, toIndex)
+
+jordan.lifeEvents = [
+		date: "1993"
+		title: "born."
+	,
+		date: "1993"
+		title: "born."
+	,
+		date: "2010"
+		title: "going to long beach"
+	,
+		date: "2014"
+		title: "graduating from long beach"
+]

@@ -8,14 +8,17 @@ head
 template(name="layout")
 	+famousContext id="mainCtx" 
 		+Modifier id="rootModifier"
-			+ContainerSurface size="[undefined, undefined]" id="rootContainer"
+			+ContainerSurface size="[undefined, undefined]" id="rootContainer" class="root-container"
 				+Surface size="[true, true]" class="page-header" origin="[0.06, 0.04]" align="[0.06, 0.04]"
 					+yield
 				+Surface size="[2000,2000]" class="world-background" origin="[.5,1]" align="[.5,1]" translate="[0, 1800, 0]"
 					| 
+				+ContainerSurface size="[2000,2000]" id="starsContainer" class="stars-container" origin="[.5,1]" align="[.5,1]" translate="[0, 1800, 0]"
+					+Surface
+						| container
 				+Modifier id="personAlignmentModifier" origin="[.5,1]" align="[.5,1]"
 					+Modifier id="personRotationXModifier"
 						+Modifier id="personRotationZModifier"
 							+Modifier id="personTranslationModifier" translate="[0, -205, 0]"
-								+Surface size="[50, 50]" class="demo-person" id="person"
-									| 
+								+Surface size="[100, 75]" class="demo-person" id="person"
+									img(class="demo-person" alt="" src="http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif" width="100" height="75")
