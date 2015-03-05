@@ -11,5 +11,8 @@
 	},
 	"famous-polyfills": {
 		"alias": "famous.polyfills"
+	},
+	"famous-lagometer": {
+		"git": "https://github.com/IjzerenHein/famous-lagometer.git"
 	}
 }

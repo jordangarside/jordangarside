@@ -2,6 +2,7 @@
 		method: 'snap'
 		dampingRatio: 1
 		period: 500
+	worldWidth = 2000
 
 	createSurfaces = (parentContainer) ->
 		console.log parentContainer
@@ -18,10 +19,14 @@
 	Template.layout.rendered = ->
 		translationAmount = new Famous.Transitionable 0
 		rotationAmount = new Famous.Transitionable 0
+		mainContext = FView.byId("mainCtx").context
+		mainContextNode = FView.byId("mainCtx").node
 		contentContainer = FView.byId('rootContainer').view
 		starsContent = FView.byId('starsContainer').view
 		starsPositionModifer = new Famous.Modifier()
 		starsContainer = starsContent.add(starsPositionModifer)
+		starsPositionModifer = FView.byId('starsPositionModifier').modifier
+		starsSurface = FView.byId('starsSurface').surface
 
 		generateStars = (options) ->
 			{@container, @higherPositionLimit, @lowerPositionLimit} = options
@@ -30,24 +35,36 @@
 			lowerPositionLimit = @lowerPositionLimit
 			maxStars = (lowerPositionLimit - higherPositionLimit) * 2
 			numberOfStars = _.random(0, maxStars)
+			stars = ""
 			for i in [0..numberOfStars]
-				alignmentXPosition = Math.random()
+				alignmentXPosition = Math.round(Math.random() * worldWidth)
 				YOffsetPosition = _.random(higherPositionLimit, lowerPositionLimit)
+				size = _.random(1, 4)
 				testModifier = new Famous.Modifier
 					origin: [alignmentXPosition, 0]
 					align: [alignmentXPosition, 0]
 					transform: Famous.Transform.translate(0,YOffsetPosition,50)
-				size = _.random(1, 4)
+				
 				testSurface = new Famous.Surface
 					size: [size,size]
 					properties:
 						backgroundColor: 'white'
-				console.log container
-				container.add(testModifier).add(testSurface)
+				stars += "
+					<div class='star'
+					style='
+						height:#{size}px;
+						left: #{alignmentXPosition}px;
+						top: #{YOffsetPosition}px;
+						width:#{size}px;
+					'>
+					</div>
+				"
+			starsContent.add(testModifier).add(testSurface)
+			starsSurface.setContent(stars)
 		generateStars
-			container: starsContainer
-			higherPositionLimit: -300
-			lowerPositionLimit: 600
+			container: starsSurface
+			higherPositionLimit: -1000
+			lowerPositionLimit: 1000
 		personRotationXModifier = FView.byId('personRotationXModifier').modifier
 		personRotationZModifier = FView.byId('personRotationZModifier').modifier
 		contentSync = new Famous.GenericSync(
@@ -95,3 +112,23 @@
 			return Famous.Transform.rotateZ(rotationAmount.get())
 		starsPositionModifer.transformFrom ->
 			return Famous.Transform.translate(0,translationAmount.get(),0)
+
+		#Lagometer
+		Lagometer = require("famous-lagometer/Lagometer")
+		lagometerModifier = new Famous.Modifier(
+			size: [
+				100
+				100
+			]
+			align: [
+				1.0
+				0.0
+			]
+			origin: [
+				1.0
+				0.0
+			]
+			transform: Famous.Transform.translate(-10, 20, 100)
+		)
+		lagometer = new Lagometer(size: lagometerModifier.getSize()) # required'
+		mainContextNode.add(lagometerModifier).add(lagometer)
