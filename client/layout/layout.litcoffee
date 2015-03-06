@@ -3,6 +3,19 @@
 		dampingRatio: 1
 		period: 500
 	worldWidth = 2000
+	visibleHeight = 200
+	visibleWidth = 1200
+	starSectionArray = []
+	starSectionArrayOffset = 1
+	starSectionHeight = 100
+	if window.screen.width > window.screen.height
+		starSectionWidth = window.screen.width
+	else
+		starSectionWidth = window.screen.height
+	if starSectionWidth > visibleWidth
+		maxStars = (starSectionHeight * 4) / 3
+	else
+		maxStars = ((starSectionHeight * 4) / 3) * (starSectionWidth/visibleWidth)
 
 	createSurfaces = (parentContainer) ->
 		console.log parentContainer
@@ -23,48 +36,70 @@
 		mainContextNode = FView.byId("mainCtx").node
 		contentContainer = FView.byId('rootContainer').view
 		starsContent = FView.byId('starsContainer').view
-		starsPositionModifer = new Famous.Modifier()
 		starsContainer = starsContent.add(starsPositionModifer)
 		starsPositionModifer = FView.byId('starsPositionModifier').modifier
-		starsSurface = FView.byId('starsSurface').surface
+		starsPositionModifierNode = FView.byId('starsPositionModifier').node
+		#starSectionsRenderController = new Famous.RenderController()
+		#starsPositionModifierNode.add(starSectionsRenderController)
+
+		showStarSection = (options) ->
+			{@section} = options
+			if not starSectionArray[starSectionArrayOffset + @section]?
+				console.log "Creating Star Section: #{@section}"
+				offset = @section * starSectionHeight
+				starSectionArray[starSectionArrayOffset + @section] = generateStars
+					container: starsPositionModifierNode
+					offset: offset
+					surfaceSize: starSectionHeight
+				window.starSectionArray = starSectionArray
 
 		generateStars = (options) ->
-			{@container, @higherPositionLimit, @lowerPositionLimit} = options
+			{@container, @offset} = options
 			container = @container
-			higherPositionLimit = @higherPositionLimit
-			lowerPositionLimit = @lowerPositionLimit
-			maxStars = (lowerPositionLimit - higherPositionLimit) * 2
+			offset = @offset
+			stars = generateStarsContent()
+			# --------------- Z-Index Fixer -----------
+			testModifier = new Famous.Modifier
+				origin: [0, 0]
+				align: [0, 0]
+				transform: Famous.Transform.translate(0,0,50)
+			testSurface = new Famous.Surface
+				size: [10,10]
+				properties:
+					backgroundColor: 'white'
+			starsContent.add(testModifier).add(testSurface)
+			# -----------------------------------------
+			starSectionModifier = new Famous.Modifier
+				origin: [.5, 0]
+				align: [.5, 0]
+				transform: Famous.Transform.translate(0,offset,0)
+			starSection = new Famous.Surface
+				content: stars
+				size: [starSectionWidth, starSectionHeight]
+			container.add(starSectionModifier).add(starSection)
+			return {
+				surface: starSection
+				modifier: starSectionModifier
+				offset: offset
+			}
+		generateStarsContent = ->
 			numberOfStars = _.random(0, maxStars)
 			stars = ""
 			for i in [0..numberOfStars]
-				alignmentXPosition = Math.round(Math.random() * worldWidth)
-				YOffsetPosition = _.random(higherPositionLimit, lowerPositionLimit)
-				size = _.random(1, 4)
-				testModifier = new Famous.Modifier
-					origin: [alignmentXPosition, 0]
-					align: [alignmentXPosition, 0]
-					transform: Famous.Transform.translate(0,YOffsetPosition,50)
-				
-				testSurface = new Famous.Surface
-					size: [size,size]
-					properties:
-						backgroundColor: 'white'
+				alignmentXPosition = _.random(0, starSectionWidth)
+				YOffsetPosition = _.random(0, starSectionHeight)
+				starSize = _.random(1, 4)
 				stars += "
 					<div class='star'
 					style='
-						height:#{size}px;
+						height:#{starSize}px;
 						left: #{alignmentXPosition}px;
 						top: #{YOffsetPosition}px;
-						width:#{size}px;
+						width:#{starSize}px;
 					'>
 					</div>
 				"
-			starsContent.add(testModifier).add(testSurface)
-			starsSurface.setContent(stars)
-		generateStars
-			container: starsSurface
-			higherPositionLimit: -1000
-			lowerPositionLimit: 1000
+			return stars
 		personRotationXModifier = FView.byId('personRotationXModifier').modifier
 		personRotationZModifier = FView.byId('personRotationZModifier').modifier
 		contentSync = new Famous.GenericSync(
@@ -81,19 +116,21 @@
 			current_translationAmount = translationAmount.get()
 			current_rotationAmount = rotationAmount.get()
 			#If slip is true then it's scroll and needs a ratio
-			if event.slip == true
-				delta = event.delta / 24
-			else
+			if not event.slip? or event.slip == false
 				delta = event.delta
-			new_translationAmount = current_translationAmount + delta
-			delta_rotationAmount = delta * Math.PI / 360
-			new_rotationAmount = current_rotationAmount + delta_rotationAmount
-			if event.slip == true
-				translationAmount.set(new_translationAmount, {duration: 30, curve: "linear"})
-				rotationAmount.set(new_rotationAmount, {duration: 30, curve: "linear"})
 			else
+				delta = event.delta / 24
+				
+			new_translationAmount = current_translationAmount + delta
+			delta_rotationAmount = delta * 0.0087 #Math.PI / 360
+			new_rotationAmount = current_rotationAmount + delta_rotationAmount
+			if not event.slip? or event.slip == false
 				translationAmount.set(new_translationAmount)
 				rotationAmount.set(new_rotationAmount)
+			else
+				translationAmount.set(new_translationAmount, {duration: 30, curve: "linear"})
+				rotationAmount.set(new_rotationAmount, {duration: 30, curve: "linear"})
+				
 		contentSync.on "end", (event) ->
 			console.log "event - contentContainer: end"
 			translationAmount.halt()
@@ -106,11 +143,34 @@
 			new_rotationAmount = current_rotationAmount + delta_rotationAmount
 			translationAmount.set(new_translationAmount, updateStopTransition)
 			rotationAmount.set(new_rotationAmount, updateStopTransition)
+
+
 		personRotationXModifier.transformFrom ->
 			return Famous.Transform.rotateX(rotationAmount.get())
 		personRotationZModifier.transformFrom ->
 			return Famous.Transform.rotateZ(rotationAmount.get())
+		previousStarSection = 0
+		numberOfVisibleSections = Math.floor(visibleHeight/starSectionHeight)
+		for i in [previousStarSection-1..previousStarSection+numberOfVisibleSections+1]
+			showStarSection({section: i})
+		starsReady = true
 		starsPositionModifer.transformFrom ->
+			currentStarSection = -Math.round(translationAmount.get() / starSectionHeight)
+			if currentStarSection isnt previousStarSection
+				sortedStarSectionArray = _.sortBy starSectionArray, 'offset'
+				if currentStarSection > previousStarSection
+					newOffset = sortedStarSectionArray[sortedStarSectionArray.length - 1].offset + starSectionHeight
+					starSectionArrayIndex = starSectionArray.indexOf(sortedStarSectionArray[0])
+					starSectionArray[starSectionArrayIndex].offset = newOffset
+					starSectionArray[starSectionArrayIndex].surface.setContent(generateStarsContent())
+					starSectionArray[starSectionArrayIndex].modifier.setTransform(Famous.Transform.translate(0,newOffset,0))
+				else
+					newOffset = sortedStarSectionArray[0].offset - starSectionHeight
+					starSectionArrayIndex = starSectionArray.indexOf(sortedStarSectionArray[sortedStarSectionArray.length - 1])
+					starSectionArray[starSectionArrayIndex].offset = newOffset
+					starSectionArray[starSectionArrayIndex].surface.setContent(generateStarsContent())
+					starSectionArray[starSectionArrayIndex].modifier.setTransform(Famous.Transform.translate(0,newOffset,0))
+			previousStarSection = currentStarSection
 			return Famous.Transform.translate(0,translationAmount.get(),0)
 
 		#Lagometer
