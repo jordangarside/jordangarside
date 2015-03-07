@@ -50,7 +50,7 @@
 			topThetaValue: Math.PI / 2
 			currentThetaTransitionable: rotationAmount
 		jordan.lifeEvents[2].enable
-			topThetaValue: -Math.PI / 2
+			topThetaValue: Math.PI
 			currentThetaTransitionable: rotationAmount
 
 		showStarSection = (options) ->
@@ -131,14 +131,20 @@
 				delta = event.delta / 24
 				
 			new_translationAmount = current_translationAmount + delta
-			delta_rotationAmount = delta * 0.0087 #Math.PI / 360
+			delta_rotationAmount = (-1) * delta * 0.0087 #Math.PI / 360
 			new_rotationAmount = current_rotationAmount + delta_rotationAmount
 			if not event.slip? or event.slip == false
 				translationAmount.set(new_translationAmount)
-				rotationAmount.set(new_rotationAmount)
+				if new_rotationAmount > 0
+					rotationAmount.set(new_rotationAmount)
+				else
+					rotationAmount.set(0)
 			else
 				translationAmount.set(new_translationAmount, {duration: 30, curve: "linear"})
-				rotationAmount.set(new_rotationAmount, {duration: 30, curve: "linear"})
+				if new_rotationAmount > 0
+					rotationAmount.set(new_rotationAmount, {duration: 30, curve: "linear"})
+				else
+					rotationAmount.set(0, {duration: 30, curve: "linear"})
 				
 		contentSync.on "end", (event) ->
 			console.log "event - contentContainer: end"
@@ -147,11 +153,14 @@
 			current_translationAmount = translationAmount.get()
 			current_rotationAmount = rotationAmount.get()
 			delta_translationAmount = event.velocity * 180
-			delta_rotationAmount = event.velocity * Math.PI / 2
+			delta_rotationAmount = (-1) * event.velocity * Math.PI / 2
 			new_translationAmount = current_translationAmount + delta_translationAmount
 			new_rotationAmount = current_rotationAmount + delta_rotationAmount
 			translationAmount.set(new_translationAmount, updateStopTransition)
-			rotationAmount.set(new_rotationAmount, updateStopTransition)
+			if new_rotationAmount > 0
+				rotationAmount.set(new_rotationAmount, updateStopTransition)
+			else
+				rotationAmount.set(0, updateStopTransition)
 
 		previousStarSection = 0
 		numberOfVisibleSections = Math.floor(visibleHeight/starSectionHeight)

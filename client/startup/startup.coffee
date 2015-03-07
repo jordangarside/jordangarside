@@ -68,21 +68,21 @@ jordan.lifeEvents = [
 			month: 10
 			year: 1993
 		title: "born."
-		text: "this is some text"
+		text: "the day it all started"
 		imageURL: "/images/animations/panda.gif"
 	,
 		date:
 			month: 12
-			year: 1993
-		title: "born."
-		text: "this is some text"
+			year: 2014
+		title: "car"
+		text: "started living in my car"
 		imageURL: "/images/animations/fire.gif"
 	,
 		date:
 			month: 1
-			year: 1994
-		title: "donut."
-		text: "not text"
+			year: 2014
+		title: "college"
+		text: "got a chemistry degree from CSULB"
 		imageURL: "/images/animations/landscape.gif"
 	,
 		date:
@@ -105,6 +105,21 @@ jordan.lifeEvents = [
 		imageURL: "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 ]
 
+jordan.months = [
+	"January"
+	"February"
+	"March"
+	"April"
+	"May"
+	"June"
+	"July"
+	"August"
+	"September"
+	"October"
+	"November"
+	"December"
+]
+
 jordan.prepareLifeEvents = (options) ->
 	{@container} = options
 	_.each jordan.lifeEvents, (lifeEvent, index) =>
@@ -112,10 +127,17 @@ jordan.prepareLifeEvents = (options) ->
 			jordan.lifeEvents[index].created = true
 			jordan.lifeEvents[index].enabled = false
 			lifeEventRenderController = new Famous.RenderController()
-			lifeEventSize = jordan.lifeEvents[index].size ? [200, 150]
-			lifeEventSurface = new Famous.ImageSurface
-				size: lifeEventSize
-				content: jordan.lifeEvents[index].imageURL
+			lifeEventSize = jordan.lifeEvents[index].size ? [150, 100]
+			lifeEventSurface = new Famous.Surface
+				size: [true,true]
+				content: "
+					<div>
+						<h1 style='display: inline-block; margin: 0;'>#{jordan.lifeEvents[index].title}</h1>
+						<h4 style='display: inline-block; vertical-align: baseline; margin: 0;'>#{jordan.lifeEvents[index].date.year}</h4>
+					</div>
+					<img src='#{jordan.lifeEvents[index].imageURL}' width='#{lifeEventSize[0]}px' height='#{lifeEventSize[1]}px'>
+					<p style='width:#{lifeEventSize[0]}px; text-align: center;'>#{jordan.lifeEvents[index].text}</p>
+				"
 			rotationXModifier = new Famous.Modifier()
 			rotationZModifier = new Famous.Modifier()
 			translationModifier = new Famous.Modifier
@@ -130,12 +152,12 @@ jordan.prepareLifeEvents = (options) ->
 					if not @currentThetaTransitionable?
 						throw "currentThetaTransitionable must be specified"
 					rotationXModifier.transformFrom =>
-						thetaOffset = @currentThetaTransitionable.get() - @topThetaValue
+						thetaOffset = @topThetaValue - @currentThetaTransitionable.get()
 						return Famous.Transform.rotateX(thetaOffset)
 					rotationZModifier.transformFrom =>
-						thetaOffset = @currentThetaTransitionable.get() - @topThetaValue
+						thetaOffset = @topThetaValue - @currentThetaTransitionable.get()
 						return Famous.Transform.rotateZ(thetaOffset)
-					lifeEventRenderController.show(lifeEventSurface)
+					lifeEventRenderController.show(lifeEventSurface, {curve: "linear", duration: 0})
 			jordan.lifeEvents[index].disable = ->
 				if jordan.lifeEvents[index].enabled
 					jordan.lifeEvents[index].enabled = false
