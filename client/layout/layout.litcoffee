@@ -39,8 +39,19 @@
 		starsContainer = starsContent.add(starsPositionModifer)
 		starsPositionModifer = FView.byId('starsPositionModifier').modifier
 		starsPositionModifierNode = FView.byId('starsPositionModifier').node
+		animationsContainer = FView.byId("animationsAlignmentModifier").node
 		#starSectionsRenderController = new Famous.RenderController()
 		#starsPositionModifierNode.add(starSectionsRenderController)
+		jordan.prepareLifeEvents({container: animationsContainer})
+		jordan.lifeEvents[0].enable
+			topThetaValue: 0
+			currentThetaTransitionable: rotationAmount
+		jordan.lifeEvents[1].enable
+			topThetaValue: Math.PI / 2
+			currentThetaTransitionable: rotationAmount
+		jordan.lifeEvents[2].enable
+			topThetaValue: -Math.PI / 2
+			currentThetaTransitionable: rotationAmount
 
 		showStarSection = (options) ->
 			{@section} = options
@@ -100,8 +111,6 @@
 					</div>
 				"
 			return stars
-		personRotationXModifier = FView.byId('personRotationXModifier').modifier
-		personRotationZModifier = FView.byId('personRotationZModifier').modifier
 		contentSync = new Famous.GenericSync(
 			['mouse', 'touch', 'scroll']
 		, {direction: Famous.GenericSync.DIRECTION_Y}
@@ -144,11 +153,6 @@
 			translationAmount.set(new_translationAmount, updateStopTransition)
 			rotationAmount.set(new_rotationAmount, updateStopTransition)
 
-
-		personRotationXModifier.transformFrom ->
-			return Famous.Transform.rotateX(rotationAmount.get())
-		personRotationZModifier.transformFrom ->
-			return Famous.Transform.rotateZ(rotationAmount.get())
 		previousStarSection = 0
 		numberOfVisibleSections = Math.floor(visibleHeight/starSectionHeight)
 		for i in [previousStarSection-1..previousStarSection+numberOfVisibleSections+1]

@@ -64,15 +64,87 @@ Famous.cursorToArray = (cursor, data, createFn, elementsBefore) ->
 			@addedAt(document, toIndex)
 
 jordan.lifeEvents = [
-		date: "1993"
+		date:
+			month: 10
+			year: 1993
 		title: "born."
+		text: "this is some text"
+		imageURL: "/images/animations/panda.gif"
 	,
-		date: "1993"
+		date:
+			month: 12
+			year: 1993
 		title: "born."
+		text: "this is some text"
+		imageURL: "/images/animations/fire.gif"
 	,
-		date: "2010"
+		date:
+			month: 1
+			year: 1994
+		title: "donut."
+		text: "not text"
+		imageURL: "/images/animations/landscape.gif"
+	,
+		date:
+			month: 8
+			year: 2009
+		title: "UC Merced"
+		text: "started attending."
+		imageURL: "http://i.imgur.com/UDFoIEy.gif"
+	,
+		date:
+			year: 2010
 		title: "going to long beach"
+		text: "this is some text"
+		imageURL: "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
-		date: "2014"
+		date:
+			year: 2014
 		title: "graduating from long beach"
+		text: "this is some text"
+		imageURL: "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 ]
+
+jordan.prepareLifeEvents = (options) ->
+	{@container} = options
+	_.each jordan.lifeEvents, (lifeEvent, index) =>
+		if not jordan.lifeEvents[index].created?
+			jordan.lifeEvents[index].created = true
+			jordan.lifeEvents[index].enabled = false
+			lifeEventRenderController = new Famous.RenderController()
+			lifeEventSize = jordan.lifeEvents[index].size ? [200, 150]
+			lifeEventSurface = new Famous.ImageSurface
+				size: lifeEventSize
+				content: jordan.lifeEvents[index].imageURL
+			rotationXModifier = new Famous.Modifier()
+			rotationZModifier = new Famous.Modifier()
+			translationModifier = new Famous.Modifier
+				transform: Famous.Transform.translate(0, -210, 0)
+			jordan.lifeEvents[index].enable = (options) ->
+				if not jordan.lifeEvents[index].enabled
+					jordan.lifeEvents[index].enabled = true
+					#Start Transform and Show Surface
+					{@topThetaValue, @currentThetaTransitionable} = options
+					if not @topThetaValue?
+						throw "topThetaValue must be specified"
+					if not @currentThetaTransitionable?
+						throw "currentThetaTransitionable must be specified"
+					rotationXModifier.transformFrom =>
+						thetaOffset = @currentThetaTransitionable.get() - @topThetaValue
+						return Famous.Transform.rotateX(thetaOffset)
+					rotationZModifier.transformFrom =>
+						thetaOffset = @currentThetaTransitionable.get() - @topThetaValue
+						return Famous.Transform.rotateZ(thetaOffset)
+					lifeEventRenderController.show(lifeEventSurface)
+			jordan.lifeEvents[index].disable = ->
+				if jordan.lifeEvents[index].enabled
+					jordan.lifeEvents[index].enabled = false
+					#Stop Transforms and Hide Surface
+					rotationXModifier.transformFrom()
+					rotationZModifier.transformFrom()
+					lifeEventRenderController.hide()
+			@container
+				.add(rotationXModifier)
+				.add(rotationZModifier)
+				.add(translationModifier)
+				.add(lifeEventRenderController)
