@@ -2,12 +2,12 @@
 		method: 'snap'
 		dampingRatio: 1
 		period: 500
-	worldWidth = 2000
-	visibleHeight = 200
-	visibleWidth = 1200
-	starSectionArray = []
-	starSectionArrayOffset = 1
-	starSectionHeight = 100
+	worldWidth				= 2000
+	visibleHeight			= 200
+	visibleWidth			= 1200
+	starSectionArray		= []
+	starSectionArrayOffset	= 1
+	starSectionHeight		= 100
 	if window.screen.width > window.screen.height
 		starSectionWidth = window.screen.width
 	else
@@ -30,16 +30,16 @@
 			parentContainer.add(lifeEventModifier).add(lifeEventSurface)
 
 	Template.layout.rendered = ->
-		translationAmount = new Famous.Transitionable 0
-		rotationAmount = new Famous.Transitionable 0
-		mainContext = FView.byId("mainCtx").context
-		mainContextNode = FView.byId("mainCtx").node
-		contentContainer = FView.byId('rootContainer').view
-		starsContent = FView.byId('starsContainer').view
-		starsContainer = starsContent.add(starsPositionModifer)
-		starsPositionModifer = FView.byId('starsPositionModifier').modifier
-		starsPositionModifierNode = FView.byId('starsPositionModifier').node
-		animationsContainer = FView.byId("animationsAlignmentModifier").node
+		translationAmount			= new Famous.Transitionable 0
+		rotationAmount				= new Famous.Transitionable 0
+		mainContext					= FView.byId("mainCtx").context
+		mainContextNode				= FView.byId("mainCtx").node
+		contentContainer			= FView.byId('rootContainer').view
+		starsContent				= FView.byId('starsContainer').view
+		starsContainer				= starsContent.add(starsPositionModifer)
+		starsPositionModifer		= FView.byId('starsPositionModifier').modifier
+		starsPositionModifierNode	= FView.byId('starsPositionModifier').node
+		animationsContainer			= FView.byId("animationsAlignmentModifier").node
 		#starSectionsRenderController = new Famous.RenderController()
 		#starsPositionModifierNode.add(starSectionsRenderController)
 		jordan.prepareLifeEvents({container: animationsContainer})
@@ -66,9 +66,9 @@
 
 		generateStars = (options) ->
 			{@container, @offset} = options
-			container = @container
-			offset = @offset
-			stars = generateStarsContent()
+			container	= @container
+			offset		= @offset
+			stars		= generateStarsContent()
 			# --------------- Z-Index Fixer -----------
 			testModifier = new Famous.Modifier
 				origin: [0, 0]
@@ -97,9 +97,9 @@
 			numberOfStars = _.random(0, maxStars)
 			stars = ""
 			for i in [0..numberOfStars]
-				alignmentXPosition = _.random(0, starSectionWidth)
-				YOffsetPosition = _.random(0, starSectionHeight)
-				starSize = _.random(1, 4)
+				alignmentXPosition	= _.random(0, starSectionWidth)
+				YOffsetPosition		= _.random(0, starSectionHeight)
+				starSize			= _.random(1, 4)
 				stars += "
 					<div class='star'
 					style='
@@ -130,9 +130,9 @@
 			else
 				delta = event.delta / 24
 				
-			new_translationAmount = current_translationAmount + delta
-			delta_rotationAmount = (-1) * delta * 0.0087 #Math.PI / 360
-			new_rotationAmount = current_rotationAmount + delta_rotationAmount
+			new_translationAmount	= current_translationAmount + delta
+			delta_rotationAmount	= (-1) * delta * 0.0087 #Math.PI / 360
+			new_rotationAmount		= current_rotationAmount + delta_rotationAmount
 			if not event.slip? or event.slip == false
 				translationAmount.set(new_translationAmount)
 				if new_rotationAmount > 0
@@ -150,12 +150,12 @@
 			console.log "event - contentContainer: end"
 			translationAmount.halt()
 			rotationAmount.halt()
-			current_translationAmount = translationAmount.get()
-			current_rotationAmount = rotationAmount.get()
-			delta_translationAmount = event.velocity * 180
-			delta_rotationAmount = (-1) * event.velocity * Math.PI / 2
-			new_translationAmount = current_translationAmount + delta_translationAmount
-			new_rotationAmount = current_rotationAmount + delta_rotationAmount
+			current_translationAmount	= translationAmount.get()
+			current_rotationAmount		= rotationAmount.get()
+			delta_translationAmount		= event.velocity * 180
+			delta_rotationAmount		= (-1) * event.velocity * Math.PI / 2
+			new_translationAmount		= current_translationAmount + delta_translationAmount
+			new_rotationAmount			= current_rotationAmount + delta_rotationAmount
 			translationAmount.set(new_translationAmount, updateStopTransition)
 			if new_rotationAmount > 0
 				rotationAmount.set(new_rotationAmount, updateStopTransition)
@@ -166,7 +166,7 @@
 		numberOfVisibleSections = Math.floor(visibleHeight/starSectionHeight)
 		for i in [previousStarSection-1..previousStarSection+numberOfVisibleSections+1]
 			showStarSection({section: i})
-		starsReady = true
+		starsReady = false
 		starsPositionModifer.transformFrom ->
 			currentStarSection = -Math.round(translationAmount.get() / starSectionHeight)
 			if currentStarSection isnt previousStarSection
