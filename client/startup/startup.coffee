@@ -76,11 +76,17 @@ jordan.lifeEvents = [
 		#imageURL: "/images/image1.jpg"
 	,
 		date:
+			year: 1994
+		title: "walked"
+		text: "the journey begins"
+		imageURL: "/images/animations/demo.gif"
+	,
+		date:
 			month: 12
 			year: 2014
 		title: "car"
 		text: "started living in my car"
-		imageURL: "/images/animations/fire.gif"
+		imageURL: "/images/animations/demo.gif"
 		#imageURL: "/images/image2.jpg"
 	,
 		date:
@@ -126,6 +132,12 @@ jordan.months = [
 	"December"
 ]
 
+twoPi			= 6.2832 # 2 * Math.PI
+piOverFour		= 0.7853982 # Math.PI / 4
+piOverFive		= 0.62832 # Math.PI / 5
+sevenPiOverFour	= 5.497787 # 7 * Math.PI / 4
+ninePiOverFive	= 5.6549 # 9 * Math.PI / 5
+
 jordan.prepareLifeEvents = (options) ->
 	{@container} = options
 	_.each jordan.lifeEvents, (lifeEvent, index) =>
@@ -164,26 +176,21 @@ jordan.prepareLifeEvents = (options) ->
 						return Famous.Transform.translate(starsTranslation[0], starsTranslation[1]-10, starsTranslation[2])
 
 					rotationXModifier.transformFrom =>
-						thetaTransitionable = @currentThetaTransitionable.get()
-						thetaOffset = @topThetaValue - thetaTransitionable
-						return Famous.Transform.rotateX(thetaOffset)
+						thetaOffset = @topThetaValue - @currentThetaTransitionable.get()
+						return Famous.Transform.rotateZ(thetaOffset)
 					rotationYModifier.transformFrom =>
-						twoPi			= 6.283185 # 2 * Math.PI
-						piOverFour		= 0.7853982 # Math.PI / 4
-						sevenPiOverFour	= 5.497787 # 7 * Math.PI / 4
-
 						thetaTransitionable = @currentThetaTransitionable.get()
 						thetaOffset = Math.abs((@topThetaValue - thetaTransitionable)) - (twoPi * (Math.floor(thetaTransitionable / (twoPi))))
 						#console.log "Index: #{index}, thetaOffset: #{thetaOffset}"
 						switch
-							when -(piOverFour) < thetaOffset <= 0
-								return Famous.Transform.rotateY(thetaOffset)
-							when (sevenPiOverFour) < thetaOffset <= twoPi
-								return Famous.Transform.rotateY(-(twoPi - thetaOffset))
-							when 0 < thetaOffset < piOverFour
+							when -(piOverFive) < thetaOffset <= 0
 								return Famous.Transform.rotateY(-thetaOffset)
+							when (ninePiOverFive) < thetaOffset <= twoPi
+								return Famous.Transform.rotateY((twoPi - thetaOffset))
+							when 0 < thetaOffset < piOverFive
+								return Famous.Transform.rotateY(thetaOffset)
 							else
-								return Famous.Transform.rotateY(-piOverFour)
+								return Famous.Transform.rotateY(piOverFive)
 					lifeEventRenderController.show(lifeEventSurface, {curve: "linear", duration: 0})
 			jordan.lifeEvents[index].disable = ->
 				if jordan.lifeEvents[index].enabled

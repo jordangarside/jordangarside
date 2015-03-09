@@ -50,7 +50,7 @@
 		jordan.lifeEvents[1].enable
 			topThetaValue: Math.PI / 2
 			currentThetaTransitionable: rotationAmount
-		jordan.lifeEvents[2].enable
+		jordan.lifeEvents[3].enable
 			topThetaValue: Math.PI
 			currentThetaTransitionable: rotationAmount
 
