@@ -63,6 +63,9 @@ Famous.cursorToArray = (cursor, data, createFn, elementsBefore) ->
 			@removedAt(undefined, fromIndex)
 			@addedAt(document, toIndex)
 
+
+jordan.starsTranslation	= new Famous.Transitionable([0, -200, 0])
+
 jordan.lifeEvents = [
 		date:
 			month: 10
@@ -145,8 +148,7 @@ jordan.prepareLifeEvents = (options) ->
 					backfaceVisibility: "visible"
 			rotationXModifier	= new Famous.Modifier()
 			rotationYModifier	= new Famous.Modifier()
-			translationModifier	= new Famous.Modifier
-				transform: Famous.Transform.translate(0, -210, 0)
+			translationModifier	= new Famous.Modifier()
 			jordan.lifeEvents[index].enable = (options) ->
 				if not jordan.lifeEvents[index].enabled
 					jordan.lifeEvents[index].enabled = true
@@ -156,12 +158,15 @@ jordan.prepareLifeEvents = (options) ->
 						throw "topThetaValue must be specified"
 					if not @currentThetaTransitionable?
 						throw "currentThetaTransitionable must be specified"
-					oldThetaValue = undefined
+
+					translationModifier.transformFrom =>
+						starsTranslation = jordan.starsTranslation.get()
+						return Famous.Transform.translate(starsTranslation[0], starsTranslation[1]-10, starsTranslation[2])
+
 					rotationXModifier.transformFrom =>
 						thetaTransitionable = @currentThetaTransitionable.get()
-						if oldThetaValue isnt thetaTransitionable
-							thetaOffset = @topThetaValue - thetaTransitionable
-							return Famous.Transform.rotateX(thetaOffset)
+						thetaOffset = @topThetaValue - thetaTransitionable
+						return Famous.Transform.rotateX(thetaOffset)
 					rotationYModifier.transformFrom =>
 						twoPi			= 6.283185 # 2 * Math.PI
 						piOverFour		= 0.7853982 # Math.PI / 4
@@ -184,6 +189,7 @@ jordan.prepareLifeEvents = (options) ->
 				if jordan.lifeEvents[index].enabled
 					jordan.lifeEvents[index].enabled = false
 					#Stop Transforms and Hide Surface
+					translationModifier.transformFrom()
 					rotationXModifier.transformFrom()
 					rotationYModifier.transformFrom()
 					lifeEventRenderController.hide()
@@ -192,3 +198,4 @@ jordan.prepareLifeEvents = (options) ->
 				.add(rotationXModifier)
 				.add(translationModifier)
 				.add(lifeEventRenderController)
+

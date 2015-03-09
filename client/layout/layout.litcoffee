@@ -30,16 +30,17 @@
 			parentContainer.add(lifeEventModifier).add(lifeEventSurface)
 
 	Template.layout.rendered = ->
-		translationAmount			= new Famous.Transitionable 0
-		rotationAmount				= new Famous.Transitionable 0
-		mainContext					= FView.byId("mainCtx").context
-		mainContextNode				= FView.byId("mainCtx").node
-		contentContainer			= FView.byId('rootContainer').view
-		starsContent				= FView.byId('starsContainer').view
-		starsContainer				= starsContent.add(starsPositionModifer)
-		starsPositionModifer		= FView.byId('starsPositionModifier').modifier
-		starsPositionModifierNode	= FView.byId('starsPositionModifier').node
-		animationsContainer			= FView.byId("animationsAlignmentModifier").node
+		translationAmount					= new Famous.Transitionable 0
+		rotationAmount						= new Famous.Transitionable 0
+		mainContext							= FView.byId("mainCtx").context
+		mainContextNode						= FView.byId("mainCtx").node
+		contentContainer					= FView.byId('rootContainer').view
+		starsContent						= FView.byId('starsContainer').view
+		starsContainer						= starsContent.add(starsPositionModifer)
+		starsContainerTranslationModifier	= FView.byId('starContainerTranslationModifir').modifier
+		starsPositionModifer				= FView.byId('starsPositionModifier').modifier
+		starsPositionModifierNode			= FView.byId('starsPositionModifier').node
+		animationsContainer					= FView.byId("animationsAlignmentModifier").node
 		#starSectionsRenderController = new Famous.RenderController()
 		#starsPositionModifierNode.add(starSectionsRenderController)
 		jordan.prepareLifeEvents({container: animationsContainer})
@@ -53,6 +54,21 @@
 			topThetaValue: Math.PI
 			currentThetaTransitionable: rotationAmount
 
+		starsContainerTranslationModifier.transformFrom ->
+			starsTranslation = jordan.starsTranslation.get()
+			return Famous.Transform.translate(starsTranslation[0], starsTranslation[1], starsTranslation[2])
+
+		onOrientationChange = ->
+			size = mainContext.getSize()
+			switch
+				when size[0] > size[1] and size[1] < 500
+					#landscape small device
+					jordan.starsTranslation.set([0,-75,0], {curve: "inOutCubic", duration: 300})
+				else
+					jordan.starsTranslation.set([0,-200,0], {curve: "inOutCubic", duration: 300})
+		onOrientationChange()
+		Famous.Engine.on 'resize', onOrientationChange
+			
 		showStarSection = (options) ->
 			{@section} = options
 			if not starSectionArray[starSectionArrayOffset + @section]?
