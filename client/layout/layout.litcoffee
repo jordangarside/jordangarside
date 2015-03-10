@@ -145,28 +145,26 @@
 			origin:		[ 0.5, 0 ]
 			align:		[ 0.5, 1 ]
 			transform:	Famous.Transform.translate(0, -200, 0)
-		canvasMask		= new Famous.Surface
+		canvasMask		= new Famous.ContainerSurface
 			size:		[ 2000, 2000 ]
-			content:	"<canvas id='worldCanvas'></canvas>"
 			properties:
 				backgroundColor:	"black"
 				borderRadius:		"2000px"
 				overflow:			"hidden"
-				textAlign:			"center"
 		#Code for moving canvas on orientation change
 		canvasMaskModifier.transformFrom ->
 			starsTranslation = jordan.starsTranslation.get()
 			return Famous.Transform.translate(starsTranslation[0], starsTranslation[1], starsTranslation[2])
-		###
+		
 		canvasContainerModifier = new Famous.Modifier
 			origin:	[ 0.5, 0 ]
 			align:	[ 0.5, 0 ]
 		canvasContainer = new Famous.Surface
 			content: "<canvas id='worldCanvas'></canvas>"
 			size: [ canvasWidth, canvasHeight ]
-		###
+		
 		contentContainer.add(canvasMaskModifier).add(canvasMask)
-		#canvasMask.add(canvasContainerModifier).add(canvasContainer)
+		canvasMask.add(canvasContainerModifier).add(canvasContainer)
 
 		setTimeout (->
 			threeCanvas			= document.getElementById('worldCanvas')
