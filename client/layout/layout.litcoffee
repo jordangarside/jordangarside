@@ -8,14 +8,14 @@
 	starSectionArray		= []
 	starSectionArrayOffset	= 1
 	starSectionHeight		= 100
+	translationDelta		= 0
+
 	if window.screen.width > window.screen.height
-		starSectionWidth = window.screen.width
+		largerScreenDimension	= window.screen.width
+		smallerScreenDimension	= window.screen.height
 	else
-		starSectionWidth = window.screen.height
-	if starSectionWidth > visibleWidth
-		maxStars = (starSectionHeight * 4) / 3
-	else
-		maxStars = ((starSectionHeight * 4) / 3) * (starSectionWidth/visibleWidth)
+		largerScreenDimension	= window.screen.height
+		smallerScreenDimension	= window.screen.width
 
 	createSurfaces = (parentContainer) ->
 		console.log parentContainer
@@ -35,14 +35,15 @@
 		mainContext							= FView.byId("mainCtx").context
 		mainContextNode						= FView.byId("mainCtx").node
 		contentContainer					= FView.byId('rootContainer').view
-		starsContent						= FView.byId('starsContainer').view
-		starsContainer						= starsContent.add(starsPositionModifer)
-		starsContainerTranslationModifier	= FView.byId('starContainerTranslationModifir').modifier
-		starsPositionModifer				= FView.byId('starsPositionModifier').modifier
-		starsPositionModifierNode			= FView.byId('starsPositionModifier').node
+		#starsContainerTranslationModifier	= FView.byId('starContainerTranslationModifir').modifier
 		animationsContainer					= FView.byId("animationsAlignmentModifier").node
-		#starSectionsRenderController = new Famous.RenderController()
-		#starsPositionModifierNode.add(starSectionsRenderController)
+
+		#testSurface = new Famous.Surface
+		#	size: [300, 200]
+		#	properties:
+		#		backgroundColor: "red"
+		#contentContainer.add(testSurface)
+
 		jordan.prepareLifeEvents({container: animationsContainer})
 		jordan.lifeEvents[0].enable
 			topThetaValue: 0
@@ -54,10 +55,6 @@
 			topThetaValue: Math.PI
 			currentThetaTransitionable: rotationAmount
 
-		starsContainerTranslationModifier.transformFrom ->
-			starsTranslation = jordan.starsTranslation.get()
-			return Famous.Transform.translate(starsTranslation[0], starsTranslation[1], starsTranslation[2])
-
 		onOrientationChange = ->
 			size = mainContext.getSize()
 			switch
@@ -68,65 +65,7 @@
 					jordan.starsTranslation.set([0,-200,0], {curve: "inOutCubic", duration: 300})
 		onOrientationChange()
 		Famous.Engine.on 'resize', onOrientationChange
-			
-		showStarSection = (options) ->
-			{@section} = options
-			if not starSectionArray[starSectionArrayOffset + @section]?
-				console.log "Creating Star Section: #{@section}"
-				offset = @section * starSectionHeight
-				starSectionArray[starSectionArrayOffset + @section] = generateStars
-					container: starsPositionModifierNode
-					offset: offset
-					surfaceSize: starSectionHeight
-				window.starSectionArray = starSectionArray
 
-		generateStars = (options) ->
-			{@container, @offset} = options
-			container	= @container
-			offset		= @offset
-			stars		= generateStarsContent()
-			# --------------- Z-Index Fixer -----------
-			testModifier = new Famous.Modifier
-				origin: [0, 0]
-				align: [0, 0]
-				transform: Famous.Transform.translate(0,0,50)
-			testSurface = new Famous.Surface
-				size: [10,10]
-				properties:
-					backgroundColor: 'white'
-			starsContent.add(testModifier).add(testSurface)
-			# -----------------------------------------
-			starSectionModifier = new Famous.Modifier
-				origin: [.5, 0]
-				align: [.5, 0]
-				transform: Famous.Transform.translate(0,offset,0)
-			starSection = new Famous.Surface
-				content: stars
-				size: [starSectionWidth, starSectionHeight]
-			container.add(starSectionModifier).add(starSection)
-			return {
-				surface: starSection
-				modifier: starSectionModifier
-				offset: offset
-			}
-		generateStarsContent = ->
-			numberOfStars = _.random(0, maxStars)
-			stars = ""
-			for i in [0..numberOfStars]
-				alignmentXPosition	= _.random(0, starSectionWidth)
-				YOffsetPosition		= _.random(0, starSectionHeight)
-				starSize			= _.random(1, 4)
-				stars += "
-					<div class='star'
-					style='
-						height:#{starSize}px;
-						left: #{alignmentXPosition}px;
-						top: #{YOffsetPosition}px;
-						width:#{starSize}px;
-					'>
-					</div>
-				"
-			return stars
 		contentSync = new Famous.GenericSync(
 			['mouse', 'touch', 'scroll']
 		, {direction: Famous.GenericSync.DIRECTION_Y}
@@ -145,7 +84,7 @@
 				delta = event.delta
 			else
 				delta = event.delta / 24
-				
+			translationDelta = delta
 			new_translationAmount	= current_translationAmount + delta
 			delta_rotationAmount	= (-1) * delta * 0.0087 #Math.PI / 360
 			new_rotationAmount		= current_rotationAmount + delta_rotationAmount
@@ -178,30 +117,6 @@
 			else
 				rotationAmount.set(0, updateStopTransition)
 
-		previousStarSection = 0
-		numberOfVisibleSections = Math.floor(visibleHeight/starSectionHeight)
-		for i in [previousStarSection-1..previousStarSection+numberOfVisibleSections+1]
-			showStarSection({section: i})
-		starsReady = false
-		starsPositionModifer.transformFrom ->
-			currentStarSection = -Math.round(translationAmount.get() / starSectionHeight)
-			if currentStarSection isnt previousStarSection
-				sortedStarSectionArray = _.sortBy starSectionArray, 'offset'
-				if currentStarSection > previousStarSection
-					newOffset = sortedStarSectionArray[sortedStarSectionArray.length - 1].offset + starSectionHeight
-					starSectionArrayIndex = starSectionArray.indexOf(sortedStarSectionArray[0])
-					starSectionArray[starSectionArrayIndex].offset = newOffset
-					starSectionArray[starSectionArrayIndex].surface.setContent(generateStarsContent())
-					starSectionArray[starSectionArrayIndex].modifier.setTransform(Famous.Transform.translate(0,newOffset,0))
-				else
-					newOffset = sortedStarSectionArray[0].offset - starSectionHeight
-					starSectionArrayIndex = starSectionArray.indexOf(sortedStarSectionArray[sortedStarSectionArray.length - 1])
-					starSectionArray[starSectionArrayIndex].offset = newOffset
-					starSectionArray[starSectionArrayIndex].surface.setContent(generateStarsContent())
-					starSectionArray[starSectionArrayIndex].modifier.setTransform(Famous.Transform.translate(0,newOffset,0))
-			previousStarSection = currentStarSection
-			return Famous.Transform.translate(0,translationAmount.get(),0)
-
 		#Lagometer
 		Lagometer = require("famous-lagometer/Lagometer")
 		lagometerModifier = new Famous.Modifier(
@@ -221,3 +136,110 @@
 		)
 		lagometer = new Lagometer(size: lagometerModifier.getSize()) # required'
 		mainContextNode.add(lagometerModifier).add(lagometer)
+
+		#WebGL Stuff
+		canvasWidth		= largerScreenDimension
+		canvasHeight	= 300
+
+		canvasMaskModifier = new Famous.Modifier
+			origin:		[ 0.5, 0 ]
+			align:		[ 0.5, 1 ]
+			transform:	Famous.Transform.translate(0, -200, 0)
+		canvasMask		= new Famous.Surface
+			size:		[ 2000, 2000 ]
+			content:	"<canvas id='worldCanvas'></canvas>"
+			properties:
+				backgroundColor:	"black"
+				borderRadius:		"2000px"
+				overflow:			"hidden"
+				textAlign:			"center"
+		#Code for moving canvas on orientation change
+		canvasMaskModifier.transformFrom ->
+			starsTranslation = jordan.starsTranslation.get()
+			return Famous.Transform.translate(starsTranslation[0], starsTranslation[1], starsTranslation[2])
+		###
+		canvasContainerModifier = new Famous.Modifier
+			origin:	[ 0.5, 0 ]
+			align:	[ 0.5, 0 ]
+		canvasContainer = new Famous.Surface
+			content: "<canvas id='worldCanvas'></canvas>"
+			size: [ canvasWidth, canvasHeight ]
+		###
+		contentContainer.add(canvasMaskModifier).add(canvasMask)
+		#canvasMask.add(canvasContainerModifier).add(canvasContainer)
+
+		setTimeout (->
+			threeCanvas			= document.getElementById('worldCanvas')
+			
+			VIEW_ANGLE			= 75
+			ASPECT				= largerScreenDimension / 300
+			NEAR				= 1
+			FAR					= 3000
+			camera				= new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR )
+			camera.position.z	= 250
+			numberOfStars		= largerScreenDimension
+
+			scene				= new THREE.Scene()
+			scene.fog			= new THREE.FogExp2( 0x000000, 0.0007 )
+
+			geometry			= new THREE.Geometry()
+
+			for i in [0..numberOfStars]
+				vertex		= new THREE.Vector3()
+				vertex.x	= _.random(0, 500) - 250
+				vertex.y	= _.random(0, 500) - 250
+				vertex.z	= _.random(0, 500) - 250
+				geometry.vertices.push( vertex )
+
+			parameters = [
+				[ [1, 1, 0.5], 5],
+				[ [0.95, 1, 0.5], 4 ],
+				[ [0.90, 1, 0.5], 3 ],
+				[ [0.85, 1, 0.5], 2 ],
+				[ [0.80, 1, 0.5], 1 ]
+			]
+			materials	= []
+			particles	= {}
+			i			= 0
+			h			= 0
+			color		= []
+			size		= 1
+
+			for i in [0..parameters.length-1]
+				color					= parameters[i][0]
+				size					= parameters[i][1]
+
+				materials[i] = new THREE.PointCloudMaterial
+					size: size
+
+				particles = new THREE.PointCloud( geometry, materials[i] )
+
+				particles.rotation.x	= Math.random() * 6
+				particles.rotation.y	= Math.random() * 6
+				particles.rotation.z	= Math.random() * 6
+
+				scene.add( particles )
+
+			renderer = new THREE.WebGLRenderer
+				canvas: threeCanvas
+				devicePixelRatio: window.devicePixelRatio
+			renderer.setSize( canvasWidth, canvasHeight )
+
+			render = ->
+				time = Date.now() * 0.00005
+
+				#camera.lookAt( scene.position )
+
+				for i in [0..scene.children.length-1]
+					object = scene.children[ i ]
+					if object instanceof THREE.PointCloud
+						object.rotation.y = time * ( i < 4 ? i + 1 : - (i + 1))
+
+				for i in [0..materials.length-1]
+					color = parameters[i][0]
+					h = ( 360 * ( color[0] + time ) % 360 ) / 360
+					materials[i].color.setHSL( h, color[1], color[2] )
+
+				renderer.render( scene, camera )
+			Famous.Engine.on('prerender', render )
+		), 250

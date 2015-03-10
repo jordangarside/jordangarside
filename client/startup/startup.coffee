@@ -9,6 +9,7 @@ require 'famous-polyfills'
 # Load Famo.us libraries
 Famous.Engine					= require 'famous/core/Engine'
 Famous.Surface					= require 'famous/core/Surface'
+Famous.CanvasSurface			= require 'famous/surfaces/CanvasSurface'
 Famous.ContainerSurface			= require 'famous/surfaces/ContainerSurface'
 Famous.Transform				= require 'famous/core/Transform'
 Famous.View						= require 'famous/core/View'
@@ -72,30 +73,31 @@ jordan.lifeEvents = [
 			year: 1993
 		title: "born."
 		text: "the day it all started"
-		imageURL: "/images/animations/panda.gif"
-		#imageURL: "/images/image1.jpg"
+		#imageURL: "/images/animations/panda.gif"
+		imageURL: "/images/demo.jpg"
 	,
 		date:
 			year: 1994
 		title: "walked"
 		text: "the journey begins"
-		imageURL: "/images/animations/demo.gif"
+		#imageURL: "/images/animations/demo.gif"
+		imageURL: "/images/demo.jpg"
 	,
 		date:
 			month: 12
 			year: 2014
 		title: "car"
 		text: "started living in my car"
-		imageURL: "/images/animations/demo.gif"
-		#imageURL: "/images/image2.jpg"
+		#imageURL: "/images/animations/demo.gif"
+		imageURL: "/images/image2.jpg"
 	,
 		date:
 			month: 1
 			year: 2014
 		title: "college"
 		text: "got a chemistry degree from CSULB"
-		imageURL: "/images/animations/landscape.gif"
-		#imageURL: "/images/image3.jpg"
+		#imageURL: "/images/animations/landscape.gif"
+		imageURL: "/images/demo.jpg"
 	,
 		date:
 			month: 8
