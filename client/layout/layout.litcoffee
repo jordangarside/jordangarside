@@ -203,14 +203,14 @@
 			color		= []
 			size		= 1
 
-			for i in [0..parameters.length-1]
-				color					= parameters[i][0]
-				size					= parameters[i][1]
+			for parameter, index in parameters
+				color					= parameter[0]
+				size					= parameter[1]
 
-				materials[i] = new THREE.PointCloudMaterial
+				materials[index] = new THREE.PointCloudMaterial
 					size: size
 
-				particles = new THREE.PointCloud( geometry, materials[i] )
+				particles = new THREE.PointCloud( geometry, materials[index] )
 
 				particles.rotation.x	= Math.random() * 6
 				particles.rotation.y	= Math.random() * 6
@@ -223,20 +223,22 @@
 				devicePixelRatio: window.devicePixelRatio
 			renderer.setSize( canvasWidth, canvasHeight )
 
+			temp = true
 			render = ->
 				time = Date.now() * 0.00005
-
-				for i in [0..scene.children.length-1]
-					object = scene.children[ i ]
+				if temp
+					console.log scene.children
+					temp = false
+				for object, index in scene.children
 					if object instanceof THREE.PointCloud
-						object.rotation.y = time * ( i < 4 ? i + 1 : - (i + 1))
+						object.rotation.y = time * if index < 4 then index + 1 else -(index + 1)
 						#Appear to rotate world by rotating stars
 						object.rotation.x = -rotationAmount.get()
 
-				for i in [0..materials.length-1]
-					color = parameters[i][0]
+				for material, index in materials
+					color = parameters[index][0]
 					h = ( 360 * ( color[0] + time ) % 360 ) / 360
-					materials[i].color.setHSL( h, color[1], color[2] )
+					material.color.setHSL( h, color[1], color[2] )
 
 				renderer.render( scene, camera )
 			Famous.Engine.on('prerender', render )
