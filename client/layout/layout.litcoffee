@@ -32,7 +32,6 @@
 	Template.layout.rendered = ->
 		translationAmount					= new Famous.Transitionable 0
 		rotationAmount						= new Famous.Transitionable 0
-		delta_rotationAmount				= 0
 		mainContext							= FView.byId("mainCtx").context
 		mainContextNode						= FView.byId("mainCtx").node
 		contentContainer					= FView.byId('rootContainer').view
@@ -224,9 +223,6 @@
 				devicePixelRatio: window.devicePixelRatio
 			renderer.setSize( canvasWidth, canvasHeight )
 
-			console.log camera
-			cameraInitialY = camera.position.y
-			cameraInitialZ = camera.position.z
 			render = ->
 				time = Date.now() * 0.00005
 
@@ -245,10 +241,6 @@
 				renderer.render( scene, camera )
 			Famous.Engine.on('prerender', render )
 		), 250
-
-		Famous.Engine.on('postrender', ->
-			delta_rotationAmount = 0
-		)
 
 		#Chrome Mobile Warning
 		userAgent = navigator.userAgent
