@@ -32,6 +32,7 @@
 	Template.layout.rendered = ->
 		translationAmount					= new Famous.Transitionable 0
 		rotationAmount						= new Famous.Transitionable 0
+		delta_rotationAmount				= 0
 		mainContext							= FView.byId("mainCtx").context
 		mainContextNode						= FView.byId("mainCtx").node
 		contentContainer					= FView.byId('rootContainer').view
@@ -223,15 +224,18 @@
 				devicePixelRatio: window.devicePixelRatio
 			renderer.setSize( canvasWidth, canvasHeight )
 
+			console.log camera
+			cameraInitialY = camera.position.y
+			cameraInitialZ = camera.position.z
 			render = ->
 				time = Date.now() * 0.00005
-
-				#camera.lookAt( scene.position )
 
 				for i in [0..scene.children.length-1]
 					object = scene.children[ i ]
 					if object instanceof THREE.PointCloud
 						object.rotation.y = time * ( i < 4 ? i + 1 : - (i + 1))
+						#Appear to rotate world by rotating stars
+						object.rotation.x = -rotationAmount.get()
 
 				for i in [0..materials.length-1]
 					color = parameters[i][0]
@@ -242,7 +246,12 @@
 			Famous.Engine.on('prerender', render )
 		), 250
 
+		Famous.Engine.on('postrender', ->
+			delta_rotationAmount = 0
+		)
+
 		#Chrome Mobile Warning
 		userAgent = navigator.userAgent
 		if (/Chrome\/[.0-9]* Mobile/ig.test(userAgent))
-			alert("Chrome Mobile is currently broken, try Firefox.")
+			#alert("Chrome Mobile is currently broken, try Firefox.")
+			userAgent
