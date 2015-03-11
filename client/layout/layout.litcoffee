@@ -253,5 +253,4 @@
 		#Chrome Mobile Warning
 		userAgent = navigator.userAgent
 		if (/Chrome\/[.0-9]* Mobile/ig.test(userAgent))
-			#alert("Chrome Mobile is currently broken, try Firefox.")
-			userAgent
+			alert("Chrome Mobile is currently broken, try Firefox.")
