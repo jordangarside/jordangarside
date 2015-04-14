@@ -145,7 +145,7 @@
 			origin:		[ 0.5, 0 ]
 			align:		[ 0.5, 1 ]
 			transform:	Famous.Transform.translate(0, -200, 0)
-		canvasMask		= new Famous.ContainerSurface
+		canvasMask = new Famous.ContainerSurface
 			size:		[ 2000, 2000 ]
 			properties:
 				backgroundColor:	"black"

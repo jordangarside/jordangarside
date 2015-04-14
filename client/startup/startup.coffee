@@ -74,14 +74,14 @@ jordan.lifeEvents = [
 		title: "born."
 		text: "the day it all started"
 		#imageURL: "/images/animations/panda.gif"
-		imageURL: "/images/demo.jpg"
+		imageURL: "/images/animations/error.gif"
 	,
 		date:
 			year: 1994
 		title: "walked"
 		text: "the journey begins"
 		#imageURL: "/images/animations/demo.gif"
-		imageURL: "/images/demo.jpg"
+		imageURL: "/images/animations/error.gif"
 	,
 		date:
 			month: 12
@@ -97,7 +97,7 @@ jordan.lifeEvents = [
 		title: "college"
 		text: "got a chemistry degree from CSULB"
 		#imageURL: "/images/animations/landscape.gif"
-		imageURL: "/images/demo.jpg"
+		imageURL: "/images/animations/error.gif"
 	,
 		date:
 			month: 8
