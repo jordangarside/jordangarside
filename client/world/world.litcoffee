@@ -1,7 +1,7 @@
 
 	Router.map ->
 		@route "world",
-			path: "/"
+			path: "/:eventID?"
 			controller: "worldController"
 
 	class @worldController extends RouteController
@@ -14,5 +14,7 @@
 				this.render()
 			else
 				this.render('loading')
-		onAfterAction: -> return
+		onAfterAction: ->
+			params = @getParams()
+			Session.set("eventID", params.eventID)
 		onStop: -> return

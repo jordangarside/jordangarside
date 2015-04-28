@@ -2,6 +2,10 @@
 		method: 'snap'
 		dampingRatio: 1
 		period: 500
+	updateSnapTransition =
+		curve: 'inOutCubic'
+		duration: 1200
+
 	worldWidth				= 2000
 	visibleHeight			= 200
 	visibleWidth			= 1200
@@ -9,6 +13,7 @@
 	starSectionArrayOffset	= 1
 	starSectionHeight		= 100
 	translationDelta		= 0
+	eventSeparation			= Math.PI / 2
 
 	if window.screen.width > window.screen.height
 		largerScreenDimension	= window.screen.width
@@ -31,12 +36,47 @@
 
 	Template.layout.rendered = ->
 		translationAmount					= new Famous.Transitionable 0
-		rotationAmount						= new Famous.Transitionable 0
+		rotationAmount						= jordan.rotationTransitionable
 		mainContext							= FView.byId("mainCtx").context
 		mainContextNode						= FView.byId("mainCtx").node
 		contentContainer					= FView.byId('rootContainer').view
 		#starsContainerTranslationModifier	= FView.byId('starContainerTranslationModifir').modifier
-		animationsContainer					= FView.byId("animationsAlignmentModifier").node
+		mainContainer					= FView.byId("containerModifier").node
+
+		titleModifier	= new Famous.StateModifier
+			origin: [0, 0]
+			align: [0, 0]
+			transform: Famous.Transform.translate(jordan.titleMargins[3], jordan.titleMargins[0], 0)
+		titleSurface	= new Famous.Surface
+			size: jordan.titleSize
+			classes: ["page-header"]
+			content: "jordan"
+
+		backRenderController	= new Famous.RenderController()
+		backModifier	= new Famous.StateModifier
+			origin: [0, 0]
+			align: [0, 0]
+			transform: Famous.Transform.translate(jordan.backMargins[3], jordan.backMargins[0], 100)
+		backSurface		= new Famous.Surface
+			size: jordan.backSize
+			classes: ["back-button-container"]
+			content: "<span class='back-button fa fa-arrow-circle-o-left'></span>"
+
+		backSurface.on "click", (event) ->
+			console.log "CLICKED!"
+			Router.go("world")
+
+		mainContainer.add(titleModifier).add(titleSurface)
+		mainContainer.add(backModifier).add(backRenderController)
+		jordan.showBackButton = ->
+			xTranslate	= jordan.backSize[0] + jordan.backMargins[3] + 10
+			titleModifier.setTransform(Famous.Transform.translate(xTranslate, jordan.titleMargins[0], 0), {curve: "inOutCubic", duration: 400}, ->
+				backRenderController.show(backSurface, {duration: 250})
+			)
+		jordan.hideBackButton = ->
+			backRenderController.hide({duration: 200})
+			titleModifier.setTransform(Famous.Transform.translate(jordan.titleMargins[3], jordan.titleMargins[0], 0), {curve: "inOutCubic", duration: 400})
+		
 
 		#testSurface = new Famous.Surface
 		#	size: [300, 200]
@@ -44,16 +84,35 @@
 		#		backgroundColor: "red"
 		#contentContainer.add(testSurface)
 
-		jordan.prepareLifeEvents({container: animationsContainer})
-		jordan.lifeEvents[0].enable
-			topThetaValue: 0
-			currentThetaTransitionable: rotationAmount
-		jordan.lifeEvents[1].enable
-			topThetaValue: Math.PI / 2
-			currentThetaTransitionable: rotationAmount
-		jordan.lifeEvents[3].enable
-			topThetaValue: Math.PI
-			currentThetaTransitionable: rotationAmount
+		jordan.prepareLifeEvents
+			container: mainContainer
+
+		lastEventRotationValue = (jordan.lifeEvents.length - 1) * (Math.PI / 2)
+
+		#Render Events on the Fly
+		lastRotationValue 	= -1
+		lastClosestEvent	= -1
+		Famous.Engine.on 'prerender', ->
+			newRotationValue	= rotationAmount.get()
+			if newRotationValue isnt lastRotationValue
+				lastRotationValue 	= newRotationValue
+				#Find Closest Event
+				smallestCloseEvent 		= Math.floor(newRotationValue / eventSeparation)
+				smallestCloseEventTheta	= smallestCloseEvent * eventSeparation
+				largestCloseEvent 		= smallestCloseEvent + 1
+				largestCloseEventTheta	= smallestCloseEventTheta + eventSeparation
+				if Math.abs(newRotationValue - smallestCloseEventTheta) > Math.abs(newRotationValue - largestCloseEventTheta)
+					closestEvent = largestCloseEvent
+				else
+					closestEvent = smallestCloseEvent
+				if lastClosestEvent isnt closestEvent
+					lastClosestEvent = closestEvent
+					for lifeEvent, index in jordan.lifeEvents
+						if index >= closestEvent - 1 and index <= closestEvent + 1
+							jordan.lifeEvents[index]?.enable
+								currentThetaTransitionable: rotationAmount
+						else
+							jordan.lifeEvents[index]?.disable()
 
 		onOrientationChange = ->
 			size = mainContext.getSize()
@@ -70,9 +129,9 @@
 			['mouse', 'touch', 'scroll']
 		, {direction: Famous.GenericSync.DIRECTION_Y}
 		)
-		contentContainer.pipe contentSync
 		contentSync.on "start", (event) ->
 			console.log "event - contentContainer: start"
+			console.log event
 		contentSync.on "update", (event) ->
 			console.log "event - contentContainer: update"
 			translationAmount.halt()
@@ -83,23 +142,19 @@
 			if not event.slip? or event.slip == false
 				delta = event.delta
 			else
-				delta = event.delta / 24
+				delta = event.delta / 14
 			translationDelta = delta
 			new_translationAmount	= current_translationAmount + delta
 			delta_rotationAmount	= (-1) * delta * 0.0087 #Math.PI / 360
 			new_rotationAmount		= current_rotationAmount + delta_rotationAmount
-			if not event.slip? or event.slip == false
-				translationAmount.set(new_translationAmount)
-				if new_rotationAmount > 0
-					rotationAmount.set(new_rotationAmount)
-				else
-					rotationAmount.set(0)
-			else
-				translationAmount.set(new_translationAmount, {duration: 30, curve: "linear"})
-				if new_rotationAmount > 0
-					rotationAmount.set(new_rotationAmount, {duration: 30, curve: "linear"})
-				else
+			translationAmount.set(new_translationAmount, {duration: 30, curve: "linear"})
+			switch
+				when new_rotationAmount <= 0
 					rotationAmount.set(0, {duration: 30, curve: "linear"})
+				when new_rotationAmount >= lastEventRotationValue
+					rotationAmount.set(lastEventRotationValue, updateStopTransition)
+				else
+					rotationAmount.set(new_rotationAmount, {duration: 30, curve: "linear"})
 				
 		contentSync.on "end", (event) ->
 			console.log "event - contentContainer: end"
@@ -112,11 +167,22 @@
 			new_translationAmount		= current_translationAmount + delta_translationAmount
 			new_rotationAmount			= current_rotationAmount + delta_rotationAmount
 			translationAmount.set(new_translationAmount, updateStopTransition)
-			if new_rotationAmount > 0
-				rotationAmount.set(new_rotationAmount, updateStopTransition)
-			else
-				rotationAmount.set(0, updateStopTransition)
+			switch
+				when new_rotationAmount <= 0
+					rotationAmount.set(0, updateStopTransition)
+				when new_rotationAmount >= lastEventRotationValue
+					rotationAmount.set(lastEventRotationValue, updateStopTransition)
+				else
+					closestSnap = findClosestSnap(new_rotationAmount)
+					rotationAmount.set(new_rotationAmount, updateStopTransition, ->
+						rotationAmount.set(closestSnap, updateSnapTransition)
+					)
 
+		jordan.enableDragEvents = ->
+			contentContainer.pipe contentSync
+		jordan.enableDragEvents()
+		jordan.disableDragEvents = ->
+			contentContainer.unpipe contentSync
 		#Lagometer
 		Lagometer = require("famous-lagometer/Lagometer")
 		lagometerModifier = new Famous.Modifier(
@@ -248,3 +314,21 @@
 		userAgent = navigator.userAgent
 		if (/Chrome\/[.0-9]* Mobile/ig.test(userAgent))
 			alert("Chrome Mobile is currently broken, try Firefox.")
+
+		Deps.autorun ->
+			eventID = Session.get('eventID')
+			jordan.closeEvent ->
+				jordan.lifeEvents[eventID]?.expand()
+
+
+	findClosestSnap = (theta) ->
+		snapValue		= eventSeparation
+		smallestTick	= Math.floor(theta / snapValue)
+		smallestSnap	= smallestTick * snapValue
+		largestSnap		= smallestSnap + snapValue
+		snapToValue		= 0
+		if Math.abs(theta - smallestSnap) > Math.abs(theta - largestSnap)
+			snapToValue = largestSnap
+		else
+			snapToValue = smallestSnap
+		return snapToValue
