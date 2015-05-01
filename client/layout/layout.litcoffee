@@ -56,7 +56,7 @@
 		backModifier	= new Famous.StateModifier
 			origin: [0, 0]
 			align: [0, 0]
-			transform: Famous.Transform.translate(jordan.backMargins[3], jordan.backMargins[0], 100)
+			transform: Famous.Transform.translate(jordan.backMargins[3], jordan.backMargins[0], 1000)
 		backSurface		= new Famous.Surface
 			size: jordan.backSize
 			classes: ["back-button-container"]
@@ -115,13 +115,22 @@
 							jordan.lifeEvents[index]?.disable()
 
 		onOrientationChange = ->
-			size = mainContext.getSize()
+			size			= mainContext.getSize()
+			if size[0] < jordan.boxSizeMax[0]
+				jordan.boxSize[0]	= size[0]
+			else
+				jordan.boxSize[0]	= jordan.boxSizeMax[0]
+			if size[1] < jordan.boxSizeMax[1]
+				jordan.boxSize[1]	= size[1]
+			else
+				jordan.boxSize[1]	= jordan.boxSizeMax[1]
 			switch
 				when size[0] > size[1] and size[1] < 500
-					#landscape small device
-					jordan.starsTranslation.set([0,-75,0], {curve: "inOutCubic", duration: 300})
+					jordan.worldHeightShowing	= 50
 				else
-					jordan.starsTranslation.set([0,-200,0], {curve: "inOutCubic", duration: 300})
+					jordan.worldHeightShowing	= 200
+			if not jordan.eventExpanded()
+				jordan.starsTranslation.set [0, -jordan.worldHeightShowing, 0], {curve: "inOutCubic", duration: 300}
 		onOrientationChange()
 		Famous.Engine.on 'resize', onOrientationChange
 
@@ -201,7 +210,7 @@
 			transform: Famous.Transform.translate(-10, 20, 100)
 		)
 		lagometer = new Lagometer(size: lagometerModifier.getSize()) # required'
-		mainContextNode.add(lagometerModifier).add(lagometer)
+		#mainContextNode.add(lagometerModifier).add(lagometer)
 
 		#WebGL Stuff
 		canvasWidth		= largerScreenDimension
@@ -313,7 +322,7 @@
 		#Chrome Mobile Warning
 		userAgent = navigator.userAgent
 		if (/Chrome\/[.0-9]* Mobile/ig.test(userAgent))
-			alert("Chrome Mobile is currently broken, try Firefox.")
+			console.log("Chrome Mobile is currently broken, try Firefox.")
 
 		Deps.autorun ->
 			eventID = Session.get('eventID')

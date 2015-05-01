@@ -30,3 +30,33 @@ body, .famous-container
 	text-align: center
 	.back-button
 		font-size: 40px !important
+
+.life-event-container
+	cursor: default
+	overflow: visible
+	a
+		text-decoration: none
+		color: darkorchid
+		font-weight: 600
+	.header-container
+		.header
+			display: inline-block
+			margin: 0
+			overflow: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
+			width: inherit
+	.image-container
+		cursor: pointer
+	.description-container
+		.description
+			text-align: center
+			transition: font-size 0.7s
+			overflow: hidden
+			white-space: nowrap
+			text-overflow: ellipsis
+	&.expanded
+		.description-container
+			.description
+				font-size: 30px
+				white-space: normal
