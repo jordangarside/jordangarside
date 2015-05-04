@@ -12,7 +12,6 @@
 	starSectionArray		= []
 	starSectionArrayOffset	= 1
 	starSectionHeight		= 100
-	translationDelta		= 0
 	eventSeparation			= Math.PI / 2
 
 	if window.screen.width > window.screen.height
@@ -124,35 +123,25 @@
 				jordan.boxSize[1]	= size[1]
 			else
 				jordan.boxSize[1]	= jordan.boxSizeMax[1]
+			#Make world smaller for landscape phones
 			switch
 				when size[0] > size[1] and size[1] < 500
 					jordan.worldHeightShowing	= 50
 				else
 					jordan.worldHeightShowing	= 200
+			#Move world if there's not an event open
 			if not jordan.eventExpanded()
 				jordan.starsTranslation.set [0, -jordan.worldHeightShowing, 0], {curve: "inOutCubic", duration: 300}
 		onOrientationChange()
 		Famous.Engine.on 'resize', onOrientationChange
 
-		contentSync = new Famous.GenericSync(
-			['mouse', 'touch', 'scroll']
-		, {direction: Famous.GenericSync.DIRECTION_Y}
-		)
-		contentSync.on "start", (event) ->
-			console.log "event - contentContainer: start"
-			console.log event
-		contentSync.on "update", (event) ->
-			console.log "event - contentContainer: update"
+
+		updateContentRotation = (delta) ->
 			translationAmount.halt()
 			rotationAmount.halt()
 			current_translationAmount = translationAmount.get()
 			current_rotationAmount = rotationAmount.get()
-			#If slip is true then it's scroll and needs a ratio
-			if not event.slip? or event.slip == false
-				delta = event.delta
-			else
-				delta = event.delta / 14
-			translationDelta = delta
+
 			new_translationAmount	= current_translationAmount + delta
 			delta_rotationAmount	= (-1) * delta * 0.0087 #Math.PI / 360
 			new_rotationAmount		= current_rotationAmount + delta_rotationAmount
@@ -164,15 +153,14 @@
 					rotationAmount.set(lastEventRotationValue, updateStopTransition)
 				else
 					rotationAmount.set(new_rotationAmount, {duration: 30, curve: "linear"})
-				
-		contentSync.on "end", (event) ->
-			console.log "event - contentContainer: end"
+
+		endContentRotation = (velocity) ->
 			translationAmount.halt()
 			rotationAmount.halt()
 			current_translationAmount	= translationAmount.get()
 			current_rotationAmount		= rotationAmount.get()
-			delta_translationAmount		= event.velocity * 180
-			delta_rotationAmount		= (-1) * event.velocity * Math.PI / 2
+			delta_translationAmount		= velocity * 180
+			delta_rotationAmount		= (-1) * velocity * Math.PI / 2
 			new_translationAmount		= current_translationAmount + delta_translationAmount
 			new_rotationAmount			= current_rotationAmount + delta_rotationAmount
 			translationAmount.set(new_translationAmount, updateStopTransition)
@@ -187,11 +175,52 @@
 						rotationAmount.set(closestSnap, updateSnapTransition)
 					)
 
+		contentSync = new Famous.GenericSync(
+			['mouse', 'touch', 'scroll']
+		, {direction: Famous.GenericSync.DIRECTION_Y}
+		)
+		horizontalContentSync = new Famous.GenericSync(
+			['mouse', 'touch', 'scroll']
+		, {direction: Famous.GenericSync.DIRECTION_X}
+		)
+		scrollDirection = ""
+		horizontalContentSync.on "update", (event) ->
+			if scrollDirection == "" and Math.abs(event.position) > 15
+				scrollDirection = "horizontal"
+			if scrollDirection == "horizontal"
+				#If slip is true then it's scroll and needs a ratio
+				if not event.slip? or event.slip == false
+					delta = event.delta
+				else
+					delta = event.delta / 14
+				updateContentRotation(delta)
+		horizontalContentSync.on "end", (event) ->
+			if scrollDirection == "horizontal"
+				scrollDirection = ""
+				endContentRotation(event.velocity)
+		contentSync.on "update", (event) ->
+			if scrollDirection == "" and Math.abs(event.position) > 15
+				scrollDirection = "vertical"
+			if scrollDirection == "vertical"
+				#If slip is true then it's scroll and needs a ratio
+				if not event.slip? or event.slip == false
+					delta = event.delta
+				else
+					delta = event.delta / 14
+				updateContentRotation(delta)
+		contentSync.on "end", (event) ->
+			console.log "event - contentContainer: end"
+			if scrollDirection == "vertical"
+				scrollDirection = ""
+				endContentRotation(event.velocity)
+
 		jordan.enableDragEvents = ->
 			contentContainer.pipe contentSync
+			contentContainer.pipe horizontalContentSync
 		jordan.enableDragEvents()
 		jordan.disableDragEvents = ->
 			contentContainer.unpipe contentSync
+			contentContainer.unpipe horizontalContentSync
 		#Lagometer
 		Lagometer = require("famous-lagometer/Lagometer")
 		lagometerModifier = new Famous.Modifier(

@@ -14,5 +14,8 @@
 	},
 	"famous-lagometer": {
 		"git": "https://github.com/IjzerenHein/famous-lagometer.git"
+	},
+	"famous-flex": {
+		"bower": "famous-flex"
 	}
 }

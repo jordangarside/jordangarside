@@ -1,6 +1,14 @@
 window.Famous ?= {}
 window.jordan ?= {}
 
+# Import Famous
+require 'famous/core/famous'
+# Adds the famo.us dependencies
+require 'famous-polyfills'
+
+# Load Famo.us libraries
+Famous.Engine	= require 'famous/core/Engine'
+
 jordan.boxSize				= [500, 750]
 jordan.boxSizeMax			= [500, 750]
 jordan.boxMargins			= [0, 0, 0, 0]
@@ -22,45 +30,41 @@ jordan.worldHeightShowing	= 200
 
 expandTransition			= {curve: "inOutCubic", duration: 700}
 
-#Offsets (unexpanded)
-dateYOffset			= -(jordan.worldHeightShowing + jordan.marginOne +
-	jordan.descriptionSize[1] + jordan.marginTwo +
-	jordan.imageSize[1] + jordan.marginThree +
-	jordan.headerSize[1] + jordan.marginFour)
 
-headerYOffset		= -(jordan.worldHeightShowing + jordan.marginOne +
-	jordan.descriptionSize[1] + jordan.marginTwo +
-	jordan.imageSize[1] + jordan.marginThree)
+Famous.Engine.on 'resize', =>
+	#Offsets (unexpanded)
+	jordan.dateYOffset			= -(jordan.worldHeightShowing + jordan.marginOne +
+		jordan.descriptionSize[1] + jordan.marginTwo +
+		jordan.imageSize[1] + jordan.marginThree +
+		jordan.headerSize[1] + jordan.marginFour)
 
-imageYOffset		= -(jordan.worldHeightShowing + jordan.marginOne +
-	jordan.descriptionSize[1] + jordan.marginTwo)
+	jordan.headerYOffset		= -(jordan.worldHeightShowing + jordan.marginOne +
+		jordan.descriptionSize[1] + jordan.marginTwo +
+		jordan.imageSize[1] + jordan.marginThree)
 
-descriptionYOffset	= -(jordan.worldHeightShowing + jordan.marginOne)
+	jordan.imageYOffset		= -(jordan.worldHeightShowing + jordan.marginOne +
+		jordan.descriptionSize[1] + jordan.marginTwo)
 
-#Offsets (expanded)
-expandedDateOffsets		= []
-expandedDateOffsets[0]	= jordan.backMargins[3]
-expandedDateOffsets[1]	= jordan.backMargins[0] + jordan.backSize[1] + jordan.headerSize[1] - 20
+	jordan.descriptionYOffset	= -(jordan.worldHeightShowing + jordan.marginOne)
 
-expandedHeaderOffsets		= []
-expandedHeaderOffsets[0] 	= jordan.backMargins[3] + jordan.dateSize[0] + 15
-expandedHeaderOffsets[1] 	= jordan.backMargins[0] + jordan.backSize[1] + 10
+	#Offsets (expanded)
+	jordan.expandedDateOffsets		= []
+	jordan.expandedDateOffsets[0]	= jordan.backMargins[3]
+	jordan.expandedDateOffsets[1]	= jordan.backMargins[0] + jordan.backSize[1] + jordan.headerSize[1] - 20
 
-expandedImageOffsets	= []
-expandedImageOffsets[0]	= -20
-expandedImageOffsets[1]	= -20
+	jordan.expandedHeaderOffsets		= []
+	jordan.expandedHeaderOffsets[0] 	= jordan.backMargins[3] + jordan.dateSize[0] + 15
+	jordan.expandedHeaderOffsets[1] 	= jordan.backMargins[0] + jordan.backSize[1] + 10
 
-expandedDescriptionOffsets		= []
-expandedDescriptionOffsets[0]	= jordan.backMargins[3] + 20
-expandedDescriptionOffsets[1]	= jordan.backMargins[0] + jordan.backSize[1] + 10 + jordan.headerSize[1] + 5
+	jordan.expandedImageOffsets	= []
+	jordan.expandedImageOffsets[0]	= -20
+	jordan.expandedImageOffsets[1]	= -20
 
-# Import Famous
-require 'famous/core/famous'
-# Adds the famo.us dependencies
-require 'famous-polyfills'
+	jordan.expandedDescriptionOffsets		= []
+	jordan.expandedDescriptionOffsets[0]	= jordan.backMargins[3] + 20
+	jordan.expandedDescriptionOffsets[1]	= jordan.backMargins[0] + jordan.backSize[1] + 10 + jordan.headerSize[1] + 5
 
-# Load Famo.us libraries
-Famous.Engine					= require 'famous/core/Engine'
+
 Famous.Surface					= require 'famous/core/Surface'
 Famous.CanvasSurface			= require 'famous/surfaces/CanvasSurface'
 Famous.ContainerSurface			= require 'famous/surfaces/ContainerSurface'
@@ -125,68 +129,68 @@ jordan.lifeEvents = [
 		date:
 			age: 0
 		title: "born."
-		text: "I was born October 8th, 1993 at Cedar Sinai hospital."
+		text: "was born on October 8th, 1993 at Cedar Sinai hospital."
 		#imageURL: "/images/animations/panda.gif"
 		imageURL: "/images/animations/error.gif"
 	,
 		date:
 			age: 12
 		title: "atech"
-		text: "I started attending Advanced Technologies University (high school). I was a computer science major there for 2 years, but left grade 11 to graduate early."
-		imageURL: "/images/animations/error.gif"
+		text: "started attending Advanced Technologies University (high school). I was a computer science major there for 2 years, but left grade 11 to graduate early."
+		imageURL: "/images/animations/school.gif"
 	,
 		date:
 			age: 15
 		title: "mira costa"
-		text: "I transferred to Mira Costa High School for grade 12 to graduate early and to get in-state California tuition."
-		imageURL: "/images/animations/error.gif"
+		text: "transferred to Mira Costa High School for grade 12 to graduate early and to get in-state California tuition."
+		imageURL: "/images/animations/school.gif"
 	,
 		date:
 			age: 16
 		title: "uc merced"
-		text: "I started college at UC Merced as a biology major. I left for Long Beach State after deciding it was a better option for me."
-		imageURL: "/images/animations/error.gif" # "http://i.imgur.com/UDFoIEy.gif"
+		text: "started college at UC Merced as a biology major. I left for Long Beach State after deciding it was a better option for me."
+		imageURL: "/images/animations/school.gif" # "http://i.imgur.com/UDFoIEy.gif"
 	,
 		date:
 			age: 17
 		title: "csulb"
-		text: "I transferred to Long Beach State and became a chemistry major."
-		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
+		text: "transferred to Long Beach State and became a chemistry major."
+		imageURL: "/images/animations/school.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 18
 		title: "research"
-		text: "I started doing research in electrochemistry, more specifically electron tunneling junctions on mercury and EGaIn."
+		text: "started doing research in electrochemistry, more specifically electron tunneling junctions on mercury and EGaIn."
 		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 18
 		title: "inlet"
-		text: "I began working on <a target='_blank' href='https://www.inlet.nu'>inlet</a> (desktop) because I felt it was an important idea that needed to be done."
+		text: "began working on <a target='_blank' href='https://www.inlet.nu'>inlet</a> (desktop) because I felt it was an important idea that needed to be done."
 		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 21
 		title: "paper"
-		text: "I published a <a target='_blank' href='http://www.electrochemsci.org/papers/vol9/90804345.pdf'>research paper</a> with Dr. Slowinski et al."
+		text: "published a <a target='_blank' href='http://www.electrochemsci.org/papers/vol9/90804345.pdf'>research paper</a> with Dr. Slowinski et al."
 		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 21
 		title: "graduation"
-		text: "I graduated from Long Beach State with my degree in chemistry."
+		text: "graduated from Long Beach State with my degree in chemistry."
 		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 21
 		title: "inlet (mobile)"
-		text: "I started working on a mobile application for <a target='_blank' href='http://www.inlet.nu/cordova'>inlet</a> based in polymer and famo.us."
+		text: "started working on a mobile application for <a target='_blank' href='http://www.inlet.nu/cordova'>inlet</a> based in polymer and famo.us."
 		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 21
-		title: "jordangarside.com"
-		text: "I began working on this as a way to demonstrate some of my web design capabilities, although it doesn't show validation, batch work, or database management."
+		title: "peronsal page"
+		text: "began working on jordangarside.com as a way to demonstrate some of my web design capabilities, although it doesn't show validation, batch work, or database management."
 		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 ]
 
@@ -293,13 +297,13 @@ jordan.prepareLifeEvents = (options) ->
 					@currentThetaTransitionable	= jordan.rotationTransitionable
 
 					dateModifier.transformFrom =>
-						return Famous.Transform.translate(0, dateYOffset, 0)
+						return Famous.Transform.translate(0, jordan.dateYOffset, 0)
 					headerModifier.transformFrom =>
-						return Famous.Transform.translate(0, headerYOffset, 0) 
+						return Famous.Transform.translate(0, jordan.headerYOffset, 0) 
 					imageModifier.transformFrom =>
-						return Famous.Transform.translate(0, imageYOffset, 0)
+						return Famous.Transform.translate(0, jordan.imageYOffset, 0)
 					descriptionModifier.transformFrom =>
-						return Famous.Transform.translate(0, descriptionYOffset, 0)
+						return Famous.Transform.translate(0, jordan.descriptionYOffset, 0)
 
 					rotationXModifier.transformFrom =>
 						thetaOffset = @topThetaValue - @currentThetaTransitionable.get()
@@ -347,7 +351,7 @@ jordan.prepareLifeEvents = (options) ->
 					lifeEventContainerSurface.addClass('expanded')
 
 					#Date
-					dateTranslationTransitionable	= new Famous.Transitionable [0, dateYOffset, 0]
+					dateTranslationTransitionable	= new Famous.Transitionable [0, jordan.dateYOffset, 0]
 					dateOriginTransitionable 		= new Famous.Transitionable [0.5, 1]
 
 					dateModifier.transformFrom ->
@@ -358,11 +362,11 @@ jordan.prepareLifeEvents = (options) ->
 					dateModifier.alignFrom ->
 						return dateOriginTransitionable.get()
 
-					dateTranslationTransitionable.set([expandedDateOffsets[0], expandedDateOffsets[1], 0], expandTransition)
+					dateTranslationTransitionable.set([jordan.expandedDateOffsets[0], jordan.expandedDateOffsets[1], 0], expandTransition)
 					dateOriginTransitionable.set([0, 0], expandTransition)
 					
 					#Header
-					headerTranslationTransitionable = new Famous.Transitionable [0, headerYOffset, 0]
+					headerTranslationTransitionable = new Famous.Transitionable [0, jordan.headerYOffset, 0]
 					headerOriginTransitionable 		= new Famous.Transitionable [0.5, 1]
 					headerSizeTransitionable		= new Famous.Transitionable jordan.headerSize
 
@@ -376,12 +380,12 @@ jordan.prepareLifeEvents = (options) ->
 					headerModifier.sizeFrom ->
 						return headerSizeTransitionable.get()
 
-					headerTranslationTransitionable.set([expandedHeaderOffsets[0], expandedHeaderOffsets[1], 0], expandTransition)
+					headerTranslationTransitionable.set([jordan.expandedHeaderOffsets[0], jordan.expandedHeaderOffsets[1], 0], expandTransition)
 					headerOriginTransitionable.set([0, 0], expandTransition)
-					headerSizeTransitionable.set([(jordan.boxSize[0] - expandedHeaderOffsets[0] - 20), jordan.headerSize[1]], expandTransition)
+					headerSizeTransitionable.set([(jordan.boxSize[0] - jordan.expandedHeaderOffsets[0] - 20), jordan.headerSize[1]], expandTransition)
 
 					#Image
-					imageTranslationTransitionable 	= new Famous.Transitionable [0, imageYOffset, 0]
+					imageTranslationTransitionable 	= new Famous.Transitionable [0, jordan.imageYOffset, 0]
 					imageOriginTransitionable 		= new Famous.Transitionable [0.5, 1]
 
 					imageModifier.transformFrom ->
@@ -392,11 +396,11 @@ jordan.prepareLifeEvents = (options) ->
 					imageModifier.alignFrom ->
 						return imageOriginTransitionable.get()
 
-					imageTranslationTransitionable.set([expandedImageOffsets[0], expandedImageOffsets[1], 0], expandTransition)
+					imageTranslationTransitionable.set([jordan.expandedImageOffsets[0], jordan.expandedImageOffsets[1], 0], expandTransition)
 					imageOriginTransitionable.set([1, 1], expandTransition)
 
 					#Description
-					descriptionTranslationTransitionable 	= new Famous.Transitionable [0, descriptionYOffset, 0]
+					descriptionTranslationTransitionable 	= new Famous.Transitionable [0, jordan.descriptionYOffset, 0]
 					descriptionOriginTransitionable 		= new Famous.Transitionable [0.5, 1]
 					descriptionSizeTransitionable			= new Famous.Transitionable jordan.descriptionSize
 
@@ -410,9 +414,12 @@ jordan.prepareLifeEvents = (options) ->
 					descriptionModifier.sizeFrom		->
 						return descriptionSizeTransitionable.get()
 
-					descriptionTranslationTransitionable.set([expandedDescriptionOffsets[0], expandedDescriptionOffsets[1], 0], expandTransition)
+					descriptionTranslationTransitionable.set([jordan.expandedDescriptionOffsets[0], jordan.expandedDescriptionOffsets[1], 0], expandTransition)
 					descriptionOriginTransitionable.set([0, 0], expandTransition)
-					descriptionSizeTransitionable.set([(jordan.boxSize[0] - 2*expandedDescriptionOffsets[0]), jordan.descriptionSize[1]], expandTransition)
+					expandedDescriptionSize	= jordan.boxSize[0] - 2*jordan.expandedDescriptionOffsets[0]
+					if jordan.worldHeightShowing == 50
+						expandedDescriptionSize = expandedDescriptionSize / 2
+					descriptionSizeTransitionable.set([expandedDescriptionSize, jordan.descriptionSize[1]], expandTransition)
 
 					#Move stars down
 					jordan.starsTranslation.set([0, jordan.worldHeightShowing, 0], expandTransition)
@@ -434,7 +441,7 @@ jordan.prepareLifeEvents = (options) ->
 				lifeEventContainerSurface.removeClass('expanded')
 
 				#Date
-				dateTranslationTransitionable	= new Famous.Transitionable([expandedDateOffsets[0], expandedDateOffsets[1], 0])
+				dateTranslationTransitionable	= new Famous.Transitionable([jordan.expandedDateOffsets[0], jordan.expandedDateOffsets[1], 0])
 				dateOriginTransitionable		= new Famous.Transitionable [0, 0]
 	
 				dateModifier.transformFrom ->
@@ -445,13 +452,13 @@ jordan.prepareLifeEvents = (options) ->
 				dateModifier.alignFrom ->
 					return dateOriginTransitionable.get()
 
-				dateTranslationTransitionable.set([0, dateYOffset, 0], expandTransition)
+				dateTranslationTransitionable.set([0, jordan.dateYOffset, 0], expandTransition)
 				dateOriginTransitionable.set([0.5, 1], expandTransition)
 
 				#Header
-				headerTranslationTransitionable	= new Famous.Transitionable [expandedHeaderOffsets[0], expandedHeaderOffsets[1], 0]
+				headerTranslationTransitionable	= new Famous.Transitionable [jordan.expandedHeaderOffsets[0], jordan.expandedHeaderOffsets[1], 0]
 				headerOriginTransitionable		= new Famous.Transitionable [0, 0]
-				headerSizeTransitionable		= new Famous.Transitionable [(jordan.boxSize[0] - expandedHeaderOffsets[0] - 20), jordan.headerSize[1]]
+				headerSizeTransitionable		= new Famous.Transitionable [(jordan.boxSize[0] - jordan.expandedHeaderOffsets[0] - 20), jordan.headerSize[1]]
 
 				headerModifier.transformFrom ->
 					headerTranslation = headerTranslationTransitionable.get()
@@ -463,12 +470,12 @@ jordan.prepareLifeEvents = (options) ->
 				headerModifier.sizeFrom		->
 					return headerSizeTransitionable.get()
 
-				headerTranslationTransitionable.set([0, headerYOffset, 0], expandTransition)
+				headerTranslationTransitionable.set([0, jordan.headerYOffset, 0], expandTransition)
 				headerOriginTransitionable.set([0.5, 1], expandTransition)
 				headerSizeTransitionable.set(jordan.headerSize, expandTransition)
 
 				#Image
-				imageTranslationTransitionable    = new Famous.Transitionable([expandedImageOffsets[0], expandedImageOffsets[1], 0])
+				imageTranslationTransitionable    = new Famous.Transitionable([jordan.expandedImageOffsets[0], jordan.expandedImageOffsets[1], 0])
 				imageOriginTransitionable		= new Famous.Transitionable [1, 1]
 
 				imageModifier.transformFrom ->
@@ -479,13 +486,13 @@ jordan.prepareLifeEvents = (options) ->
 				imageModifier.alignFrom ->
 					return imageOriginTransitionable.get()
 
-				imageTranslationTransitionable.set([0, imageYOffset, 0], expandTransition)
+				imageTranslationTransitionable.set([0, jordan.imageYOffset, 0], expandTransition)
 				imageOriginTransitionable.set([0.5, 1], expandTransition)
 
 				#Description
-				descriptionTranslationTransitionable	= new Famous.Transitionable([expandedDescriptionOffsets[0], expandedDescriptionOffsets[1], 0])
+				descriptionTranslationTransitionable	= new Famous.Transitionable([jordan.expandedDescriptionOffsets[0], jordan.expandedDescriptionOffsets[1], 0])
 				descriptionOriginTransitionable			= new Famous.Transitionable [0, 0]
-				descriptionSizeTransitionable			= new Famous.Transitionable [(jordan.boxSize[0] - 2*expandedDescriptionOffsets[0]), jordan.descriptionSize[1]]
+				descriptionSizeTransitionable			= new Famous.Transitionable [(jordan.boxSize[0] - 2*jordan.expandedDescriptionOffsets[0]), jordan.descriptionSize[1]]
 
 				descriptionModifier.transformFrom ->
 					descriptionTranslation = descriptionTranslationTransitionable.get()
@@ -497,7 +504,7 @@ jordan.prepareLifeEvents = (options) ->
 				descriptionModifier.sizeFrom ->
 					return descriptionSizeTransitionable.get()
 
-				descriptionTranslationTransitionable.set([0, descriptionYOffset, 0], expandTransition)
+				descriptionTranslationTransitionable.set([0, jordan.descriptionYOffset, 0], expandTransition)
 				descriptionOriginTransitionable.set([0.5, 1], expandTransition)
 				descriptionSizeTransitionable.set(jordan.descriptionSize, expandTransition)
 
