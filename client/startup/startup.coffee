@@ -161,13 +161,13 @@ jordan.lifeEvents = [
 			age: 18
 		title: "research"
 		text: "started doing research in electrochemistry, more specifically electron tunneling junctions on mercury and EGaIn."
-		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
+		imageURL: "/images/animations/junction.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
-			age: 18
+			age: 19
 		title: "inlet"
 		text: "began working on <a target='_blank' href='https://www.inlet.nu'>inlet</a> (desktop) because I felt it was an important idea that needed to be done."
-		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
+		imageURL: "/images/animations/inlet.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 21
@@ -179,17 +179,17 @@ jordan.lifeEvents = [
 			age: 21
 		title: "graduation"
 		text: "graduated from Long Beach State with my degree in chemistry."
-		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
+		imageURL: "/images/animations/graduation.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 21
-		title: "inlet (mobile)"
+		title: "inletM"
 		text: "started working on a mobile application for <a target='_blank' href='http://www.inlet.nu/cordova'>inlet</a> based in polymer and famo.us."
-		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
+		imageURL: "/images/animations/inletMobile.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 	,
 		date:
 			age: 21
-		title: "peronsal page"
+		title: "this page"
 		text: "began working on jordangarside.com as a way to demonstrate some of my web design capabilities, although it doesn't show validation, batch work, or database management."
 		imageURL: "/images/animations/error.gif" # "http://www.scribblelive.com/wp-content/uploads/2014/01/panda.gif"
 ]

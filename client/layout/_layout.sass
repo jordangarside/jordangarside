@@ -1,13 +1,24 @@
-body, .famous-container
-	background-color: $backdrop-color
-	color: $main-font-color
+body
+	background-color: white
+	color: black
 	text-shadow: $main-font-outline
 	font-family: $font-stack
+	&.colors
+		color: white
+		font-family: 'Open sans' !important
+		text-shadow: none
+		.famous-container
+			background-color: transparent
 	.famous-container
+		background-color: white
 		overflow: hidden
+
+.no-background-transition
+	transition: background-color 0s
 
 .root-container
 	overflow: hidden
+	transition: background-color 20s
 
 .page-header
 	font-size: 24px
@@ -17,6 +28,10 @@ body, .famous-container
 	background-color: black
 	border-radius: 2000px
 	//overflow: hidden
+
+.worldCanvasContainer
+	background-color: black
+	transition: background-color 20s
 	
 .demo-person
 	background-color: darkgrey
@@ -44,6 +59,7 @@ body, .famous-container
 			display: inline-block
 			margin: 0
 			overflow: hidden
+			text-align: center
 			text-overflow: ellipsis
 			width: inherit
 	.image-container

@@ -1,3 +1,5 @@
+	window.jordan ?= {}
+
 	updateStopTransition =
 		method: 'snap'
 		dampingRatio: 1
@@ -252,7 +254,7 @@
 		canvasMask = new Famous.ContainerSurface
 			size:		[ 2000, 2000 ]
 			properties:
-				backgroundColor:	"black"
+				#backgroundColor:	"black"
 				borderRadius:		"2000px"
 				overflow:			"hidden"
 		#Code for moving canvas on orientation change
@@ -264,8 +266,11 @@
 			origin:	[ 0.5, 0 ]
 			align:	[ 0.5, 0 ]
 		canvasContainer = new Famous.Surface
-			content: "<canvas id='worldCanvas'></canvas>"
+			classes: ['worldCanvasContainer', 'no-background-transition']
+			content: "<canvas id='worldCanvas' class='no-background-transition' style=''></canvas>"
 			size: [ canvasWidth, canvasHeight ]
+			properties:
+				backgroundColor: jordan.complementaryColor
 		
 		contentContainer.add(canvasMaskModifier).add(canvasMask)
 		canvasMask.add(canvasContainerModifier).add(canvasContainer)
@@ -323,9 +328,11 @@
 				scene.add( particles )
 
 			renderer = new THREE.WebGLRenderer
+				alpha: true
 				canvas: threeCanvas
 				devicePixelRatio: window.devicePixelRatio
 			renderer.setSize( canvasWidth, canvasHeight )
+			renderer.setClearColor( 0x000000, 0 )
 
 			temp = true
 			render = ->
@@ -340,10 +347,13 @@
 						object.rotation.x = -rotationAmount.get()
 
 				for material, index in materials
-					color = parameters[index][0]
-					h = ( 360 * ( color[0] + time ) % 360 ) / 360
-					material.color.setHSL( h, color[1], color[2] )
-
+					if window.jordan.useColors? and window.jordan.useColors
+						material.color.setHSL( 255, 255, 255 )
+					else 
+						color = parameters[index][0]
+						h = ( 360 * ( color[0] + time ) % 360 ) / 360
+						material.color.setHSL( h, color[1], color[2] )
+					
 				renderer.render( scene, camera )
 			Famous.Engine.on('prerender', render )
 		), 250
@@ -370,3 +380,37 @@
 		else
 			snapToValue = smallestSnap
 		return snapToValue
+
+	window.jordan.backgroundColorChanger = ->
+		changeBackground = ->
+			randomColor = ->
+				colorArray = []
+				h = _.random(1, 360)
+				s = _.random(80, 90)
+				l = _.random(50, 60)
+				h2 = undefined
+				if h < 180
+					h2 = h + 180
+				else
+					h2 = h - 180
+				colorArray[0] = 'hsl(' + h + ',' + s + '%,' + l + '%)'
+				colorArray[1] = 'hsl(' + h2 + ',' + s + '%,' + l + '%)'
+				return colorArray
+			colors = randomColor()
+			jordan.backgroundColor 		= colors[0]
+			jordan.complementaryColor	= colors[1]
+			$('.root-container').css
+				backgroundColor: colors[0]
+			$('.worldCanvasContainer').css
+				backgroundColor: colors[1]
+		changeBackground()
+		setTimeout (->
+			$('.root-container').removeClass('no-background-transition')
+			$('.worldCanvasContainer').removeClass('no-background-transition')
+			setTimeout (->
+				changeBackground()
+				setInterval (->
+					changeBackground()
+				), 20000
+			), 500
+		), 2000
