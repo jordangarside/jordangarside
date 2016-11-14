@@ -13,6 +13,7 @@ current_path = ""
 page('/', (ctx) ->
 	if current_path != page.current
 		console.log 'Router: Home Route...'
+		document.title = 'jordan garside'
 		home.render()
 		ga('send', 'pageview', page.current)
 		current_path = page.current
@@ -27,6 +28,7 @@ page.exit('/', (ctx, next) ->
 page('/about-me', ->
 	if current_path != page.current
 		console.log 'Router: About Route...'
+		document.title = 'jordan garside | about me'
 		about.render()
 		ga('send', 'pageview', page.current)
 		current_path = page.current
@@ -35,6 +37,7 @@ page('/about-me', ->
 page('/electrochemistry', ->
 	if current_path != page.current
 		console.log 'Router: Electrochem Route...'
+		document.title = 'jordan garside | electrochemistry'
 		electrochemPaper.render()
 		ga('send', 'pageview', page.current)
 		current_path = page.current
@@ -43,6 +46,7 @@ page('/electrochemistry', ->
 page('/inlet', ->
 	if current_path != page.current
 		console.log 'Router: inlet Route...'
+		document.title = 'jordan garside | inlet'
 		inlet.render()
 		ga('send', 'pageview', page.current)
 		current_path = page.current
@@ -51,6 +55,7 @@ page('/inlet', ->
 page('/tesloop', ->
 	if current_path != page.current
 		console.log 'Router: tesloop Route...'
+		document.title = 'jordan garside | tesloop'
 		tesloop.render()
 		ga('send', 'pageview', page.current)
 		current_path = page.current
@@ -59,6 +64,7 @@ page('/tesloop', ->
 page('/computational-chemistry', ->
 	if current_path != page.current
 		console.log 'Router: tesloop Route...'
+		document.title = 'jordan garside | computational chemistry'
 		computationalChemPaper.render()
 		ga('send', 'pageview', page.current)
 		current_path = page.current
