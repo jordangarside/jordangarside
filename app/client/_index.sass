@@ -1,0 +1,162 @@
+
+
+#famous-root
+	height: 100%
+	width: 100%
+	overflow: hidden
+
+$backdrop-color: rgb(32, 231, 92)
+$font-stack: 'Poiret One', Helvetica
+$main-font-color: white
+$main-font-outline: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white
+
+a
+	text-decoration: none
+	color: black
+	outline: 0
+
+paper-ripple
+	// color: #01f8ff
+
+div
+	-webkit-tap-highlight-color: rgba(0,0,0,0) !important
+
+html
+	height: 100%
+	overflow: hidden
+
+[drawer]
+	overflow: auto
+.drawer-list
+	font-family: Roboto
+	list-style: none
+	margin: 15px 0 0 0
+	padding: 10px 0
+
+	a
+		border: none
+		cursor: pointer
+		display: block
+		font-size: 18px
+		font-weight: 200
+		padding: 13px 30px
+		position: relative
+		text-align: left
+		text-transform: lowercase
+.bottom-drawer-list
+	border-top: 2px dotted gainsboro
+	margin: 0 0 15px
+
+body
+	font-family: $font-stack
+	font-weight: 300
+	overflow: hidden
+	position: fixed
+	height: 100%
+	width: 100%
+	margin: 0
+
+.template-container
+	font-family: Roboto
+	padding: 0 30px 40px
+	max-width: 800px
+	margin: 0 auto
+	h1
+		font-weight: 300
+	div
+		font-size: 20px
+		font-weight: 100
+		line-height: 135%
+
+.paper-header
+	display: flex
+	flex-direction: row
+
+.website-title
+	flex: 1
+	padding: 25px 30px
+	font-size: 24px
+
+.navigation-toggle
+	align-self: center
+	margin-right: 20px
+
+#famous-root
+	position: absolute
+	top: 0px
+	left: 0px
+	bottom: 0px
+	right: 0px
+	transform-style: preserve-3d
+	backface-visibility: visible
+	pointer-events: none
+	overflow: hidden
+.famous-content-container
+	position: relative !important
+	height: 100%
+	width: 100%
+.famous-group
+	top: 0px
+	left: 0px
+	bottom: 0px
+	right: 0px
+	transform-style: preserve-3d
+	backface-visibility: visible
+	pointer-events: none
+	position: absolute
+	overflow: visible
+.famous-container-group
+	// position: relative !important
+	// img
+	// 	position: relative
+	// 	bottom: 225px
+	// 	@media (max-height: 500px)
+	// 		bottom: 21vh
+	// 		height: 90px
+	// 		width: 135px
+
+.world-surface
+	height: 100%
+	width: 100%
+.world-container
+	display: flex
+	justify-content: center
+	// height: 100%
+	// position: relative
+	// bottom: 200px
+	// @media (max-height: 500px)
+	// 	bottom: 20vh
+.world-clip
+	flex-shrink: 0
+	background-color: black
+	border-radius: 100%
+	height: 150vw
+	width: 150vw
+	min-width: 1200px
+	min-height: 1200px
+	max-width: 1800px
+	max-height: 1800px
+	overflow: hidden
+	// position: absolute
+	text-align: center
+#stars-container
+	width: 100%
+
+.famous-surface
+	transform-origin: center center 0px
+	backface-visibility: hidden
+	transform-style: preserve-3d
+	box-sizing: border-box
+	-webkit-tap-highlight-color: transparent
+	pointer-events: auto
+	position: absolute
+
+paper-header-panel
+	display: flex
+
+.content
+	position: absolute
+	top: 0
+	right: 0
+	left: 0
+	bottom: 0
