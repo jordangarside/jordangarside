@@ -2,7 +2,6 @@ import page from 'page'
 
 import about from '../pages/about/index.coffee'
 import computationalChemPaper from '../pages/computational_chem_paper/index.coffee'
-import contact from '../pages/contact/index.coffee'
 import electrochemPaper from '../pages/electrochem_paper/index.coffee'
 import home from '../pages/home/index.coffee'
 import inlet from '../pages/inlet/index.coffee'
@@ -29,14 +28,6 @@ page('/about-me', ->
 	if current_path != page.current
 		console.log 'Router: About Route...'
 		about.render()
-		ga('send', 'pageview')
-		current_path = page.current
-)
-
-page('/contact-me', ->
-	if current_path != page.current
-		console.log 'Router: Contact Route...'
-		contact.render()
 		ga('send', 'pageview')
 		current_path = page.current
 )
