@@ -91,22 +91,24 @@ render = ->
 	# lagometer = new Lagometer(size: lagometerModifier.getSize())
 	# context.add(lagometerModifier).add(lagometer)
 
-	setTimeout (->
-		renderStars(
-			canvas: document.getElementById('stars-container')
-			rotationAmountTransitionable: rotationAmountTransitionable
-			# visibleWorldHeightTransitionable: visibleWorldHeightTransitionable
-		)
-		registerListeners(
-			rotationAmountTransitionable: rotationAmountTransitionable
-			translationAmountTransitionable: translationAmountTransitionable
-		)
-		renderProjects(
-			container: contentContainer
-			rotationAmountTransitionable: rotationAmountTransitionable
-			visibleWorldHeightTransitionable: visibleWorldHeightTransitionable
-		)
-	), 50
+	renderInterval = setInterval (->
+		if document.getElementById('stars-container') isnt null
+			clearInterval(renderInterval)
+			renderStars(
+				canvas: document.getElementById('stars-container')
+				rotationAmountTransitionable: rotationAmountTransitionable
+				# visibleWorldHeightTransitionable: visibleWorldHeightTransitionable
+			)
+			registerListeners(
+				rotationAmountTransitionable: rotationAmountTransitionable
+				translationAmountTransitionable: translationAmountTransitionable
+			)
+			renderProjects(
+				container: contentContainer
+				rotationAmountTransitionable: rotationAmountTransitionable
+				visibleWorldHeightTransitionable: visibleWorldHeightTransitionable
+			)
+	), 35
 
 cleanup = ->
 	cleanupStars()
