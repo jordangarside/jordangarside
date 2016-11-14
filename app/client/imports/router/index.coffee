@@ -14,7 +14,7 @@ page('/', (ctx) ->
 	if current_path != page.current
 		console.log 'Router: Home Route...'
 		home.render()
-		ga('send', 'pageview')
+		ga('send', 'pageview', page.current)
 		current_path = page.current
 )
 
@@ -28,7 +28,7 @@ page('/about-me', ->
 	if current_path != page.current
 		console.log 'Router: About Route...'
 		about.render()
-		ga('send', 'pageview')
+		ga('send', 'pageview', page.current)
 		current_path = page.current
 )
 
@@ -36,7 +36,7 @@ page('/electrochemistry', ->
 	if current_path != page.current
 		console.log 'Router: Electrochem Route...'
 		electrochemPaper.render()
-		ga('send', 'pageview')
+		ga('send', 'pageview', page.current)
 		current_path = page.current
 )
 
@@ -44,7 +44,7 @@ page('/inlet', ->
 	if current_path != page.current
 		console.log 'Router: inlet Route...'
 		inlet.render()
-		ga('send', 'pageview')
+		ga('send', 'pageview', page.current)
 		current_path = page.current
 )
 
@@ -52,7 +52,7 @@ page('/tesloop', ->
 	if current_path != page.current
 		console.log 'Router: tesloop Route...'
 		tesloop.render()
-		ga('send', 'pageview')
+		ga('send', 'pageview', page.current)
 		current_path = page.current
 )
 
@@ -60,7 +60,7 @@ page('/computational-chemistry', ->
 	if current_path != page.current
 		console.log 'Router: tesloop Route...'
 		computationalChemPaper.render()
-		ga('send', 'pageview')
+		ga('send', 'pageview', page.current)
 		current_path = page.current
 )
 
