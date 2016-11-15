@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 
 FamousEngine   = famous.core.Engine
 
+render = null
 export renderStars = ({ canvas, rotationAmountTransitionable }) =>
 	if window.screen.width > window.screen.height
 		largerScreenDimension	= window.screen.width
@@ -94,3 +95,4 @@ export renderStars = ({ canvas, rotationAmountTransitionable }) =>
 
 export cleanupStars = ->
 	console.log "Stars: Cleaning up..."
+	FamousEngine.removeListener 'prerender', render
