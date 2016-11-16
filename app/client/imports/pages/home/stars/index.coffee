@@ -5,6 +5,7 @@ import * as _ from 'lodash'
 FamousEngine   = famous.core.Engine
 
 render = null
+
 export renderStars = ({ canvas, rotationAmountTransitionable }) =>
 	if window.screen.width > window.screen.height
 		largerScreenDimension	= window.screen.width
@@ -12,6 +13,8 @@ export renderStars = ({ canvas, rotationAmountTransitionable }) =>
 	else
 		largerScreenDimension	= window.screen.height
 		smallerScreenDimension	= window.screen.width
+	if largerScreenDimension > 1800
+		largerScreenDimension = 1800
 	canvasWidth		= largerScreenDimension
 	canvasHeight	= 210
 
