@@ -1,6 +1,5 @@
-http://jordangarside.com/
-http://jordangarside.com/about-me
-http://jordangarside.com/electrochemistry
-http://jordangarside.com/inlet
-http://jordangarside.com/tesloop
-http://jordangarside.com/computational-chemistry
+https://jordangarside.com/
+https://jordangarside.com/about-me
+https://jordangarside.com/electrochemistry
+https://jordangarside.com/inlet
+https://jordangarside.com/theoretical-chemistry
