@@ -2,13 +2,6 @@ import React from "react";
 import { Meteor } from "meteor/meteor";
 import PropTypes from "prop-types";
 
-import AddIcon from "material-ui-icons/Add";
-import AddOutlineIcon from "material-ui-icons/AddCircleOutline";
-import ListIcon from "material-ui-icons/List";
-import CancelIcon from "material-ui-icons/Cancel";
-import InfoOutlineIcon from "material-ui-icons/InfoOutline";
-// import ViewListIcon from 'material-ui-icons/ViewList';
-
 import {
   aContainer,
   Button,

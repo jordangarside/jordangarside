@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import Toolbar from "material-ui/Toolbar";
-import MenuIcon from "material-ui-icons/Menu";
+import MenuIcon from "react-icons/lib/md/menu";
 
 import { AppBar, AppBarContainer, MenuButtonContainer, Title } from "./styles";
 

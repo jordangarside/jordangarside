@@ -1,5 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import GithubIcon from "react-icons/lib/fa/github";
+import AngellistIcon from "react-icons/lib/fa/angellist";
+import LinkedinIcon from "react-icons/lib/fa/linkedin";
+import StackOverflowIcon from "react-icons/lib/fa/stack-overflow";
+import EnvelopeIcon from "react-icons/lib/fa/envelope";
 
 class About extends React.Component {
   componentWillMount() {
@@ -49,22 +54,22 @@ class About extends React.Component {
 
           <div className="link-container">
             <a href="https://github.com/jordangarside" target="_blank">
-              <i className="fa fa-github" />
+              <GithubIcon className="fa fa-github" />
             </a>
             <a href="https://angel.co/jordan-garside" target="_blank">
-              <i className="fa fa-angellist" />
+              <AngellistIcon className="fa fa-angellist" />
             </a>
             <a href="https://www.linkedin.com/in/jordangarside" target="_blank">
-              <i className="fa fa-linkedin" />
+              <LinkedinIcon className="fa fa-linkedin" />
             </a>
             <a
               href="https://stackoverflow.com/users/2898510/jordan"
               target="_blank"
             >
-              <i className="fa fa-stack-overflow" />
+              <StackOverflowIcon className="fa fa-stack-overflow" />
             </a>
             <a href="mailto:jordangarside@gmail.com" target="_blank">
-              <i className="fa fa-envelope-o" />
+              <EnvelopeIcon className="fa fa-envelope-o" />
             </a>
           </div>
         </div>
