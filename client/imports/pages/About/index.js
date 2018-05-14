@@ -18,7 +18,7 @@ class About extends React.Component {
 
           <p>
             Currently working on{" "}
-            <a href="https://about.cloudszi.com/">cloudszi</a>.
+            <a href="https://about.atomsandbits.ai/">atoms+bits</a>.
           </p>
 
           <p>Made simple scripts in high school for playing games.</p>
