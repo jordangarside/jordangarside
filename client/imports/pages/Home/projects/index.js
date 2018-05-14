@@ -59,9 +59,9 @@ export const projects = [
     URL: "/theoretical-chemistry"
   },
   {
-    title: "cloudszi",
-    imageURL: "/images/animations/cloudszi.gif",
-    URL: "https://about.cloudszi.com/"
+    title: "atoms+bits",
+    imageURL: "/images/animations/atomsandbits.gif",
+    URL: "https://about.atomsandbits.ai/"
   }
 ];
 

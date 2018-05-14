@@ -64,14 +64,14 @@ class DrawerContent extends React.Component {
           <Button
             component={aContainer}
             onClick={toggleDrawer}
-            href="https://about.cloudszi.com/"
+            href="https://about.atomsandbits.ai/"
           >
             <img
-              src="/images/animations/cloudszi.gif"
+              src="/images/animations/atomsandbits.gif"
               height="20px"
               width="30px"
             />
-            <LinkText>cloudszi</LinkText>
+            <LinkText>atoms+bits</LinkText>
           </Button>
         </LinksContainer>
         <ul className="bottom-drawer-list drawer-list">
